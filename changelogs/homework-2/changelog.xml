@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro 
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd"
+      logicalFilePath="homework-2">
+
+    <changeSet id="homework-2-user" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/01.create-user-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-role" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/02.create-role-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-user_role" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/03.create-user_role-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-shop" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/04.create-shop-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-admin_shop" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/05.create-admin_shop-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-discount_card" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/06.create-discount_card-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-coupon" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/07.create-coupon-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-purchase" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/08.create-purchase-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to user_id" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/09.add-fk-to-user_id-user_role-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to role_id" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/10.add-fk-to-role_id-user_role-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to admin" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/11.add-fk-to-admin-admin_shop-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to shop" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/12.add-fk-to-shop_id-admin_shop-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk user_id" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/13.add-fk-to-user_id-discount_card-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk shop_id" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/14.add-fk-to-shop_id-discount_card-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to shop_id" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/15.add-fk-to-shop_id-coupon-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-fk to user" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/16.add-fk-to-user_id-purchase-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog> 
