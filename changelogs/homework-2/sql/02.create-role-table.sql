@@ -1,4 +1,6 @@
-CREATE TABLE IF NOT EXISTS public.role (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    PRIMARY KEY (id));
+CREATE TABLE IF NOT EXISTS public.role
+(
+    id bigserial NOT NULL,
+    name varchar NOT NULL,
+    PRIMARY KEY (id)
+);

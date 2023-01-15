@@ -41,36 +41,16 @@
         <sqlFile encoding="utf8" path="./sql/08.create-purchase-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-fk to user_id" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/09.add-fk-to-user_id-user_role-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-2-discount_policy" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/09.create-discount_policy-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-fk to role_id" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/10.add-fk-to-role_id-user_role-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-2-user_coupon" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/10.create-user_coupon-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-fk to admin" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/11.add-fk-to-admin-admin_shop-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-fk to shop" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/12.add-fk-to-shop_id-admin_shop-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-fk user_id" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/13.add-fk-to-user_id-discount_card-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-fk shop_id" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/14.add-fk-to-shop_id-discount_card-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-fk to shop_id" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/15.add-fk-to-shop_id-coupon-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-fk to user" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/16.add-fk-to-user_id-purchase-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-2-fkeys" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/11.add-fkeys.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog> 

@@ -1,7 +1,11 @@
-CREATE TABLE IF NOT EXISTS public.purchase(
-    id bigint NOT NULL,
-    title text,
-    datetime_purchase timestamp with time zone NOT NULL,
-    sum numeric NOT NULL,
+CREATE TABLE IF NOT EXISTS public.purchase
+(
+    id bigserial NOT NULL,
+    name varchar,
+    transaction_dt timestamp NOT NULL,
+    sum decimal(10, 2) NOT NULL,
     user_id bigint NOT NULL,
-    PRIMARY KEY (id));
+    coupon_id bigint,
+    card_id bigint not null,
+    PRIMARY KEY (id)
+);

@@ -1,9 +1,12 @@
-CREATE TABLE IF NOT EXISTS public.user(
-    id bigint NOT NULL,
-    firstname text NOT NULL,
-    surname text NOT NULL,
-    phone_number text NOT NULL,
-    email text NOT NULL,
-    birthday timestamp with time zone NOT NULL,
-    score bigint DEFAULT 0,
-    PRIMARY KEY (id));
+CREATE TABLE IF NOT EXISTS public.user
+(
+    id bigserial NOT NULL,
+    firstname varchar NOT NULL,
+    surname varchar NOT NULL,
+    phone_number varchar NOT NULL,
+    email varchar NOT NULL,
+    birthday date,
+    score decimal(10, 2) DEFAULT 0,
+    is_active boolean default false,
+    PRIMARY KEY (id)
+);
