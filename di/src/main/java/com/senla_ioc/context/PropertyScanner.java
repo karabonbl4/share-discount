@@ -1,7 +1,6 @@
 package com.senla_ioc.context;
 
 import java.io.*;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 

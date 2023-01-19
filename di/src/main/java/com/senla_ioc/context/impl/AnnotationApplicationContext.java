@@ -1,6 +1,5 @@
 package com.senla_ioc.context.impl;
 
-import com.senla_ioc.annotation.Autowired;
 import com.senla_ioc.annotation.Component;
 import com.senla_ioc.annotation.Value;
 import com.senla_ioc.context.ApplicationContext;
@@ -20,9 +19,9 @@ public class AnnotationApplicationContext implements ApplicationContext {
     private final Scanner classScanner;
     private final PropertyScanner propertyScanner;
 
-    public AnnotationApplicationContext(ObjectFactory objectFactory, Scanner classScanner){
-        this.classScanner = classScanner;
-        this.objectFactory = objectFactory;
+    public AnnotationApplicationContext(){
+        this.classScanner = new Scanner();
+        this.objectFactory = new ObjectFactory();
         this.propertyScanner = new PropertyScanner();
         this.context = new HashMap<>();
     }
@@ -33,9 +32,9 @@ public class AnnotationApplicationContext implements ApplicationContext {
         // todo find @Component from allClasses
         // todo inject new object to field
         // todo put them to Map context
-//        Set<Class<?>> classes = classScanner.scanClasses(basedPackage);
+        Set<Class<?>> classes = classScanner.scanClasses(basedPackage);
 
-        Reflections reflections = new Reflections(basedPackage);
+        Reflections reflections = new Reflections(classes);
         Set<Class<?>> typesAnnotatedWithComponent = reflections.getTypesAnnotatedWith(Component.class);
         Set<Class<?>> classesWithInterface = typesAnnotatedWithComponent.stream()
                 .filter(aClass -> aClass.getInterfaces().length != 0)
@@ -61,8 +60,8 @@ public class AnnotationApplicationContext implements ApplicationContext {
                     context.put(clazz, bean);
                 }
             }
-
     }
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> clazz) {
 
