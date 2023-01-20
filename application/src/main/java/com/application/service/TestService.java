@@ -10,7 +10,7 @@ public class TestService {
     private TestDao testDao;
 
     @Autowired
-    public TestService(TestDao testDao) {
+    public void setTestDao(TestDao testDao) {
         this.testDao = testDao;
     }
 

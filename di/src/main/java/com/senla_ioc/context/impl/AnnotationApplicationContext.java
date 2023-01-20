@@ -52,13 +52,13 @@ public class AnnotationApplicationContext implements ApplicationContext {
         }
             for (Class<?> clazz : typesAnnotatedWithComponent) {
 
-                if (clazz.getInterfaces().length == 0) {
+//                if (clazz.getInterfaces().length == 0) {
                     Object bean = objectFactory.createBean(clazz);
                     if(hasValueAnnotation(bean)){
                         injectValueToFieldFromProperties(bean);
                     }
                     context.put(clazz, bean);
-                }
+//                }
             }
     }
     @SuppressWarnings("unchecked")
