@@ -16,6 +16,7 @@ public class Main {
         applicationContext.buildContext("com.senla_ioc.test");
 
         System.out.println(applicationContext.getBean(TestValueAnnotation.class).toString());
+        System.out.println(applicationContext.getBeans().toString());
 
     }
 }

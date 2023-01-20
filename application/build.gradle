@@ -13,6 +13,6 @@ dependencies {
     liquibaseRuntime 'org.liquibase:liquibase-core:4.2.2'
     liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.1'
     liquibaseRuntime 'org.postgresql:postgresql:42.5.1'
-
+    implementation project(':di')
 }
 apply plugin: "org.liquibase.gradle"

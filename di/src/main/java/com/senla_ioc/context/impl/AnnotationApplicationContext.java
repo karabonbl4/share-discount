@@ -36,10 +36,10 @@ public class AnnotationApplicationContext implements ApplicationContext {
 
         Reflections reflections = new Reflections(classes);
         Set<Class<?>> typesAnnotatedWithComponent = reflections.getTypesAnnotatedWith(Component.class);
-        Set<Class<?>> classesWithInterface = typesAnnotatedWithComponent.stream()
+        Set<Class<?>> classesWithInterfaceAndComponentAnnotation = typesAnnotatedWithComponent.stream()
                 .filter(aClass -> aClass.getInterfaces().length != 0)
                 .collect(Collectors.toSet());
-        for (Class<?> classWithInterface : classesWithInterface) {
+        for (Class<?> classWithInterface : classesWithInterfaceAndComponentAnnotation) {
             if (classWithInterface.getInterfaces().length == 1) {
                 Class<?> classInterface = Arrays.stream(classWithInterface.getInterfaces())             //while with 1 interface
                         .findFirst().orElseThrow();
@@ -97,9 +97,15 @@ public class AnnotationApplicationContext implements ApplicationContext {
 
     private String getValueAnnotationValue(String value){
         if(propertyScanner.getProperties().isEmpty()) {
-            propertyScanner.scanProperties("C:\\java\\courses\\probable-octo-potato\\di\\src\\main\\resources\\application.properties");
+            propertyScanner.scanProperties("C:\\java\\courses\\probable-octo-potato\\application\\src\\main\\resources\\application.properties");
         }
         return propertyScanner.getProperties().get(value);
+    }
+
+    public static ApplicationContext run(String applicationPackage){
+        ApplicationContext applicationContext = new AnnotationApplicationContext();
+        applicationContext.buildContext(applicationPackage);
+        return applicationContext;
     }
 }
 
