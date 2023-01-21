@@ -10,12 +10,7 @@ public class TestController {
     @Autowired
     private TestService testService;
 
-//    @Autowired
-//    public TestController(TestService testService) {
-//        this.testService = testService;
-//    }
-
-    public void execute(){
+    public void execute() {
         testService.execute();
     }
 }
