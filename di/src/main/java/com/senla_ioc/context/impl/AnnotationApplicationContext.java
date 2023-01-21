@@ -28,10 +28,6 @@ public class AnnotationApplicationContext implements ApplicationContext {
 
     @Override
     public void buildContext(String basedPackage) {
-        // todo scan package and collect all classes
-        // todo find @Component from allClasses
-        // todo inject new object to field
-        // todo put them to Map context
         Set<Class<?>> classes = classScanner.scanClasses(basedPackage);
 
         Reflections reflections = new Reflections(classes);
@@ -41,7 +37,7 @@ public class AnnotationApplicationContext implements ApplicationContext {
                 .collect(Collectors.toSet());
         for (Class<?> classWithInterface : classesWithInterfaceAndComponentAnnotation) {
             if (classWithInterface.getInterfaces().length == 1) {
-                Class<?> classInterface = Arrays.stream(classWithInterface.getInterfaces())             //while with 1 interface
+                Class<?> classInterface = Arrays.stream(classWithInterface.getInterfaces())
                         .findFirst().orElseThrow();
                 Object bean = objectFactory.createBean(classWithInterface);
                 if(hasValueAnnotation(bean)){
@@ -51,20 +47,16 @@ public class AnnotationApplicationContext implements ApplicationContext {
             }
         }
             for (Class<?> clazz : typesAnnotatedWithComponent) {
-
-//                if (clazz.getInterfaces().length == 0) {
                     Object bean = objectFactory.createBean(clazz);
                     if(hasValueAnnotation(bean)){
                         injectValueToFieldFromProperties(bean);
                     }
                     context.put(clazz, bean);
-//                }
             }
     }
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> clazz) {
-
         return (T) context.get(clazz);
     }
 
