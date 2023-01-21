@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS public.admin_trademark
 (
-    user_id bigint NOT NULL,
-    trademark_id bigint NOT NULL,
-    unique (user_id, trademark_id)
+    user_id BIGINT NOT NULL,
+    trademark_id BIGINT NOT NULL,
+    CONSTRAINT at_user_trademark PRIMARY KEY (user_id, trademark_id),
+    CONSTRAINT at_user_fk FOREIGN KEY (user_id) REFERENCES public.user (id) MATCH SIMPLE,
+    CONSTRAINT at_trademark_fk FOREIGN KEY (trademark_id) REFERENCES public.trademark (id) MATCH SIMPLE
 );

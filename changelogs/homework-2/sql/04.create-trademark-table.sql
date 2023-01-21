@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.trademark
 (
-    id bigserial NOT NULL,
-    title varchar NOT NULL,
-    PRIMARY KEY (id)
+    id BIGSERIAL,
+    title VARCHAR NOT NULL,
+    CONSTRAINT trademark_id_pk PRIMARY KEY (id)
 );

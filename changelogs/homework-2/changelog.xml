@@ -22,35 +22,31 @@
     </changeSet>
 
     <changeSet id="homework-2-shop" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/04.create-shop-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="utf8" path="./sql/04.create-trademark-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-admin_shop" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/05.create-admin_shop-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-discount_card" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/06.create-discount_card-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-coupon" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/07.create-coupon-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-purchase" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/08.create-purchase-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="utf8" path="./sql/05.create-admin_trademark-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-discount_policy" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/09.create-discount_policy-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="utf8" path="./sql/06.create-discount_policy-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-discount_card" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/07.create-discount_card-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-coupon" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/08.create-coupon-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-user_coupon" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/10.create-user_coupon-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="utf8" path="./sql/09.create-user_coupon-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-fkeys" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/11.add-fkeys.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-2-purchase" author="Lesha Korobko">
+        <sqlFile encoding="utf8" path="./sql/10.create-purchase-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog> 

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.role
 (
-    id bigserial NOT NULL,
-    name varchar NOT NULL,
-    PRIMARY KEY (id)
+    id BIGSERIAL,
+    name VARCHAR NOT NULL,
+    CONSTRAINT role_id_pk PRIMARY KEY (id)
 );
