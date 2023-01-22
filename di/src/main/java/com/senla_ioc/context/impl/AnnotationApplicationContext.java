@@ -1,14 +1,12 @@
 package com.senla_ioc.context.impl;
 
+import com.senla_ioc.annotation.Autowired;
 import com.senla_ioc.annotation.Component;
-import com.senla_ioc.annotation.Value;
 import com.senla_ioc.context.ApplicationContext;
 import com.senla_ioc.context.ObjectFactory;
-import com.senla_ioc.context.PropertyScanner;
 import com.senla_ioc.context.Scanner;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,13 +15,17 @@ public class AnnotationApplicationContext implements ApplicationContext {
     private final Map<Class<?>, Object> context;
     private final ObjectFactory objectFactory;
     private final Scanner classScanner;
-    private final PropertyScanner propertyScanner;
 
-    public AnnotationApplicationContext(){
+    public AnnotationApplicationContext() {
         this.classScanner = new Scanner();
         this.objectFactory = new ObjectFactory();
-        this.propertyScanner = new PropertyScanner();
         this.context = new HashMap<>();
+    }
+
+    public static ApplicationContext run(String applicationPackage) {
+        ApplicationContext applicationContext = new AnnotationApplicationContext();
+        applicationContext.buildContext(applicationPackage);
+        return applicationContext;
     }
 
     @Override
@@ -35,69 +37,51 @@ public class AnnotationApplicationContext implements ApplicationContext {
         Set<Class<?>> classesWithInterfaceAndComponentAnnotation = typesAnnotatedWithComponent.stream()
                 .filter(aClass -> aClass.getInterfaces().length != 0)
                 .collect(Collectors.toSet());
+        Set<Class<?>> collect = typesAnnotatedWithComponent.stream().filter(fclass -> Arrays.stream(fclass.getDeclaredConstructors())
+                .anyMatch(constructor -> !constructor.isAnnotationPresent(Autowired.class))).collect(Collectors.toSet());
+
+        for (Class<?> clazz : collect) {
+            if (clazz.getInterfaces().length == 0) {
+                Object bean = objectFactory.createBean(clazz);
+
+                context.put(clazz, bean);
+            }
+        }
+        for (Class<?> classWithInterface : classesWithInterfaceAndComponentAnnotation) {
+            if (classWithInterface.getInterfaces().length == 1) {
+                objectFactory.putClassByInterface(classWithInterface);
+            }
+        }
+
         for (Class<?> classWithInterface : classesWithInterfaceAndComponentAnnotation) {
             if (classWithInterface.getInterfaces().length == 1) {
                 Class<?> classInterface = Arrays.stream(classWithInterface.getInterfaces())
                         .findFirst().orElseThrow();
                 Object bean = objectFactory.createBean(classWithInterface);
-                if(hasValueAnnotation(bean)){
-                    injectValueToFieldFromProperties(bean);
-                }
                 context.put(classInterface, bean);
             }
         }
-            for (Class<?> clazz : typesAnnotatedWithComponent) {
-                    Object bean = objectFactory.createBean(clazz);
-                    if(hasValueAnnotation(bean)){
-                        injectValueToFieldFromProperties(bean);
-                    }
-                    context.put(clazz, bean);
+        for (Class<?> clazz : typesAnnotatedWithComponent) {
+            if (clazz.getInterfaces().length == 0 && !context.containsKey(clazz)) {
+                Object bean = objectFactory.createBean(clazz);
+                context.put(clazz, bean);
             }
+        }
+
     }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> clazz) {
         return (T) context.get(clazz);
     }
 
-    public Map<Class<?>, Object> getBeans() {
 
-        return this.context;
-    }
-    private void injectValueToFieldFromProperties(Object object){
-        Field fieldWithAnnotation = Arrays.stream(object.getClass().getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Value.class))
-                .findFirst()
-                .orElseThrow();
-        Value valueAnnotation = fieldWithAnnotation.getAnnotation(Value.class);
-        String value = valueAnnotation.value();
-        String valueFromProperty = getValueAnnotationValue(value);
-        fieldWithAnnotation.setAccessible(true);
-        try {
-            fieldWithAnnotation.set(object, valueFromProperty);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
 
-    private boolean hasValueAnnotation(Object object){
-        return Arrays.stream(object.getClass().getDeclaredFields())
-                .anyMatch(field -> field.isAnnotationPresent(Value.class));
 
-    }
 
-    private String getValueAnnotationValue(String value){
-        if(propertyScanner.getProperties().isEmpty()) {
-            propertyScanner.scanProperties("C:\\java\\courses\\probable-octo-potato\\application\\src\\main\\resources\\application.properties");
-        }
-        return propertyScanner.getProperties().get(value);
-    }
 
-    public static ApplicationContext run(String applicationPackage){
-        ApplicationContext applicationContext = new AnnotationApplicationContext();
-        applicationContext.buildContext(applicationPackage);
-        return applicationContext;
-    }
+
 }
 

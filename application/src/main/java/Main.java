@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         ApplicationContext context = AnnotationApplicationContext.run("com.application");
 
-        context.getBean(TestController.class).execute();
+        System.out.println(context.getBean(TestController.class).execute());
 
 
     }

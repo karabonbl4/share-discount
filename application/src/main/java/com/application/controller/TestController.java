@@ -7,10 +7,15 @@ import com.senla_ioc.annotation.Component;
 @Component
 public class TestController {
 
-    @Autowired
-    private TestService testService;
+    private final TestService testService;
 
-    public void execute() {
-        testService.execute();
+    @Autowired
+    public TestController(TestService testService) {
+        this.testService = testService;
+    }
+
+
+    public String execute() {
+        return testService.execute();
     }
 }
