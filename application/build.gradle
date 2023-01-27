@@ -15,4 +15,14 @@ dependencies {
     liquibaseRuntime 'org.postgresql:postgresql:42.5.1'
     implementation project(':di')
 }
+liquibase {
+    activities {
+        main {
+            changeLogFile "src/main/source/changelog.xml"
+            url "postgresql://localhost:54320/share-discount"
+            username "postgres"
+            password "postgres"
+        }
+    }
+}
 apply plugin: "org.liquibase.gradle"
