@@ -1,6 +1,5 @@
 package com.senla.service.impl;
 
-import com.senla.model.Coupon;
 import com.senla.model.DiscountPolicy;
 import com.senla.repository.impl.DiscountPolicyRepository;
 import com.senla.service.DiscountPolicyService;

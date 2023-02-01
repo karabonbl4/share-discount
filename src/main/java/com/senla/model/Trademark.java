@@ -18,4 +18,8 @@ public class Trademark extends Entity {
     private List<Coupon> coupons;
     private List<DiscountPolicy> discountPolicies;
 
+    public Trademark(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

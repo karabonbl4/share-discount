@@ -2,7 +2,6 @@ package com.senla.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senla.service.CouponService;
-
 import com.senla.service.dto.CouponDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +22,7 @@ public class CouponController {
     }
 
     @SneakyThrows
-    public String create(String newCoupon){
+    public String save(String newCoupon){
         CouponDto newCouponDto = objectMapper.readValue(newCoupon, CouponDto.class);
         CouponDto saveCoupon = couponService.save(newCouponDto);
         return objectMapper.writeValueAsString(saveCoupon);
