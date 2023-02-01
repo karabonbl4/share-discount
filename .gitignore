@@ -5,5 +5,5 @@ target/
 .gradle/*
 gradlew.bat
 gradle*
-build
+build/*
 
