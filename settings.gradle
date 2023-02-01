@@ -1,4 +1,3 @@
-rootProject.name = 'probable-octo-potato'
-include 'application'
-include 'di'
+rootProject.name = 'share-discount'
+
 
