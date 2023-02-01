@@ -59,4 +59,12 @@ public class ConnectionHolder {
     public void closeConnections() {
         comboPooledDataSource.close();
     }
+
+    public ComboPooledDataSource getComboPooledDataSource() {
+        return comboPooledDataSource;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
 }
