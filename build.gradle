@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.liquibase.gradle' version '2.0.4'
 }
 
 group 'com.senla'
@@ -10,6 +11,9 @@ repositories {
 }
 
 dependencies {
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.2.2'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.1'
+    liquibaseRuntime 'org.postgresql:postgresql:42.5.1'
     implementation 'org.springframework:spring-core:5.3.20'
     implementation 'org.springframework:spring-context:5.3.20'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
@@ -18,3 +22,14 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework:spring-web:5.3.20'
 }
+liquibase {
+    activities {
+        main {
+            changeLogFile "src/main/source/changelog.xml"
+            url "postgresql://localhost:54320/share-discount"
+            username "postgres"
+            password "postgres"
+        }
+    }
+}
+apply plugin: "org.liquibase.gradle"
