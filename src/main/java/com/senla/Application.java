@@ -14,10 +14,10 @@ public class Application {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(Application.class);
         CouponController couponController = applicationContext.getBean(CouponController.class);
         System.out.println(couponController.findById("1"));
-        TrademarkController trademarkController = applicationContext.getBean(TrademarkController.class);
-        System.out.println(trademarkController.findById("1"));
-        Thread testThread = new Thread(new TestThread(applicationContext.getBean(CouponController.class)), "testThread") ;
-        testThread.start();
-        trademarkController.update("{\"id\":2,\"title\":\"trademark6\"}");
+//        TrademarkController trademarkController = applicationContext.getBean(TrademarkController.class);
+//        System.out.println(trademarkController.findById("1"));
+//        Thread testThread = new Thread(new TestThread(applicationContext.getBean(CouponController.class)), "testThread") ;
+//        testThread.start();
+//        trademarkController.update("{\"id\":2,\"title\":\"trademark6\"}");
     }
 }

@@ -2,25 +2,36 @@ package com.senla.repository.impl;
 
 import com.senla.config.ConnectionHolder;
 import com.senla.model.Coupon;
+import com.senla.model.Purchase;
 import com.senla.model.Trademark;
+import com.senla.model.User;
 import com.senla.repository.CustomRepository;
 import com.senla.repository.mapper.CouponMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.sql.Date;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
 public class CouponRepository implements CustomRepository<Coupon> {
 
-    private static final String SELECT_BY_ID = "select * from coupon where id=";
+    private static final String SELECT_BY_ID = "SELECT * FROM coupon c \n" +
+            "\tJOIN trademark t ON c.trademark_id=t.id \n" +
+            "\tLEFT OUTER JOIN user_coupon uc ON c.id=uc.coupon_id \n" +
+            "\tLEFT OUTER JOIN \"user\" u ON uc.user_id=u.id \n" +
+            "\tJOIN purchase p ON p.coupon_id=c.id \n" +
+            "\tJOIN \"user\" us ON p.user_id=us.id\n" +
+            "\tJOIN discount_card dc ON p.card_id=dc.id \n" +
+            "\tJOIN discount_policy dp ON dc.discount_policy_id=dp.id \n" +
+            "\tWHERE c.id=?";
     private static final String UPDATE_COUPON = "update coupon set name=?, start_date=?, end_date=?, discount=?, used=?, trademark_id=? where id=?";
     private static final String INSERT_INTO_COUPON = "insert into coupon (id, name, start_date, end_date, discount, used, trademark_id) values(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_COUPON = "delete from coupon where id = ?";
     private final ConnectionHolder connectionHolder;
     private final CouponMapper couponMapper;
-    private final TrademarkRepository trademarkRepository;
 
 
     @Override
@@ -28,14 +39,18 @@ public class CouponRepository implements CustomRepository<Coupon> {
         Connection connection = connectionHolder.getConnection();
         Coupon coupon = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID + id);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID);
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            Set<Purchase> purchases = new HashSet<>();
+            Set<User> users = new HashSet<>();
             while (resultSet.next()){
                 coupon = couponMapper.convertToCoupon(resultSet);
-                Long id1 = coupon.getTrademarkId().getId();
-                Trademark byId = trademarkRepository.findForProperty(id1);
-                coupon.setTrademarkId(byId);
+                users.add(coupon.getUsers().get(0));
+                purchases.add(coupon.getPurchases().get(0));
             }
+            Objects.requireNonNull(coupon).setPurchases(purchases.stream().toList());
+            Objects.requireNonNull(coupon).setUsers(users.stream().toList());
             preparedStatement.close();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
