@@ -20,22 +20,20 @@ public class DiscountCardController {
     }
 
     @SneakyThrows
-    public String create(String newDiscountCard){
+    public void create(String newDiscountCard){
         DiscountCardDto newDiscountCardDto = objectMapper.readValue(newDiscountCard, DiscountCardDto.class);
-        DiscountCardDto saveDiscountCardDto = discountCardService.save(newDiscountCardDto);
-        return objectMapper.writeValueAsString(saveDiscountCardDto);
+        discountCardService.save(newDiscountCardDto);
     }
 
     @SneakyThrows
-    public boolean delete(String discountCard){
+    public void delete(String discountCard){
         DiscountCardDto DiscountCardDto = objectMapper.readValue(discountCard, DiscountCardDto.class);
-        return discountCardService.delete(DiscountCardDto);
+        discountCardService.delete(DiscountCardDto);
     }
 
     @SneakyThrows
-    public String update(String discountCard){
+    public void update(String discountCard){
         DiscountCardDto discountCardDto = objectMapper.readValue(discountCard, DiscountCardDto.class);
-        DiscountCardDto update = discountCardService.update(discountCardDto);
-        return objectMapper.writeValueAsString(update);
+        discountCardService.update(discountCardDto);
     }
 }

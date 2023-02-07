@@ -1,5 +1,6 @@
 package com.senla.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class DiscountCardDto {
     private BigDecimal discount;
     private UserDto ownerId;
     private DiscountPolicyDto discountPolicyId;
+    @JsonIgnore
     private List<PurchaseDto> purchases;
 }

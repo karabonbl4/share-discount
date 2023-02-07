@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.model.DiscountCard;
-import com.senla.repository.impl.DiscountCardRepository;
+import com.senla.repository.DiscountCardRepository;
 import com.senla.service.DiscountCardService;
 import com.senla.service.dto.DiscountCardDto;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +18,14 @@ public class DiscountCardServiceImpl implements DiscountCardService {
     private final DiscountCardRepository discountCardRepository;
 
     @Override
-    public DiscountCardDto save(DiscountCardDto discountCardDto) {
+    public void save(DiscountCardDto discountCardDto) {
         DiscountCard discountCard = modelMapper.map(discountCardDto, DiscountCard.class);
-        DiscountCard discountCard1 = discountCardRepository.saveOrUpdate(discountCard);
-        return modelMapper.map(discountCard1, DiscountCardDto.class);
+        discountCardRepository.save(discountCard);
     }
 
     @Override
     public DiscountCardDto findById(Long id) {
-        DiscountCard discountCard= discountCardRepository.findById(id);
+        DiscountCard discountCard = discountCardRepository.findById(id);
         return modelMapper.map(discountCard, DiscountCardDto.class);
     }
 
@@ -38,15 +37,14 @@ public class DiscountCardServiceImpl implements DiscountCardService {
     }
 
     @Override
-    public boolean delete(DiscountCardDto discountCardDto) {
+    public void delete(DiscountCardDto discountCardDto) {
         DiscountCard discountCard = modelMapper.map(discountCardDto, DiscountCard.class);
         discountCardRepository.delete(discountCard);
-        return discountCardRepository.findById(discountCardDto.getId()) == null;
     }
 
     @Override
-    public DiscountCardDto update(DiscountCardDto discountCardDto) {
+    public void update(DiscountCardDto discountCardDto) {
         DiscountCard discountCard = modelMapper.map(discountCardDto, DiscountCard.class);
-        return modelMapper.map(discountCardRepository.saveOrUpdate(discountCard), DiscountCardDto.class);
+        discountCardRepository.update(discountCard);
     }
 }

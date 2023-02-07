@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.model.Purchase;
-import com.senla.repository.impl.PurchaseRepository;
+import com.senla.repository.PurchaseRepository;
 import com.senla.service.PurchaseService;
 import com.senla.service.dto.PurchaseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 
     @Override
-    public PurchaseDto save(PurchaseDto purchaseDto) {
+    public void save(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        Purchase purchase1 = purchaseRepository.saveOrUpdate(purchase);
-        return modelMapper.map(purchase1, PurchaseDto.class);
+        purchaseRepository.save(purchase);
     }
 
     @Override
@@ -39,15 +38,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public boolean delete(PurchaseDto purchaseDto) {
+    public void delete(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
         purchaseRepository.delete(purchase);
-        return purchaseRepository.findById(purchaseDto.getId()) == null;
     }
 
     @Override
-    public PurchaseDto update(PurchaseDto purchaseDto) {
+    public void update(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        return modelMapper.map(purchaseRepository.saveOrUpdate(purchase), PurchaseDto.class);
+        purchaseRepository.update(purchase);
     }
 }

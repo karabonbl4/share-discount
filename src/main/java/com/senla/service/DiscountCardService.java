@@ -5,9 +5,9 @@ import com.senla.service.dto.DiscountCardDto;
 import java.util.List;
 
 public interface DiscountCardService {
-    DiscountCardDto save(DiscountCardDto discountCardDto);
+    void save(DiscountCardDto discountCardDto);
     DiscountCardDto findById(Long id);
     List<DiscountCardDto> findAll();
-    boolean delete(DiscountCardDto discountCardDto);
-    DiscountCardDto update(DiscountCardDto discountCardDto);
+    void delete(DiscountCardDto discountCardDto);
+    void update(DiscountCardDto discountCardDto);
 }

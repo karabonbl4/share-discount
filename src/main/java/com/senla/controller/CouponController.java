@@ -3,6 +3,7 @@ package com.senla.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senla.service.CouponService;
 import com.senla.service.dto.CouponDto;
+import com.senla.service.dto.PurchaseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
@@ -22,22 +23,26 @@ public class CouponController {
     }
 
     @SneakyThrows
-    public String save(String newCoupon){
+    public void save(String newCoupon){
         CouponDto newCouponDto = objectMapper.readValue(newCoupon, CouponDto.class);
-        CouponDto saveCoupon = couponService.save(newCouponDto);
-        return objectMapper.writeValueAsString(saveCoupon);
+        couponService.save(newCouponDto);
     }
 
     @SneakyThrows
-    public boolean delete(String coupon){
+    public void delete(String coupon){
         CouponDto couponDto = objectMapper.readValue(coupon, CouponDto.class);
-        return couponService.delete(couponDto);
     }
 
     @SneakyThrows
-    public String update(String coupon){
+    public void update(String coupon){
         CouponDto couponDto = objectMapper.readValue(coupon, CouponDto.class);
-        CouponDto update = couponService.update(couponDto);
-        return objectMapper.writeValueAsString(update);
+        couponService.update(couponDto);
+    }
+
+    @SneakyThrows
+    public String getCouponByPurchase(String purchase){
+        PurchaseDto purchaseDto = objectMapper.readValue(purchase, PurchaseDto.class);
+        CouponDto byPurchase = couponService.findByPurchase(purchaseDto);
+        return objectMapper.writeValueAsString(byPurchase);
     }
 }
