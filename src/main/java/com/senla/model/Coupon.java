@@ -20,9 +20,9 @@ public class Coupon {
     private Long id;
     @Column
     private String name;
-    @Column(name = "start_date")
+    @Column(name = "start_date", columnDefinition = "DATE")
     private Date startDate;
-    @Column(name = "end_date")
+    @Column(name = "end_date", columnDefinition = "DATE")
     private Date endDate;
     @Column
     private BigDecimal discount;

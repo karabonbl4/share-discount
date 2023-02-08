@@ -27,7 +27,7 @@ public class User {
     private String phoneNumber;
     @Column
     private String email;
-    @Column
+    @Column(columnDefinition = "DATE")
     private Date birthday;
     @Column
     private BigDecimal score;
