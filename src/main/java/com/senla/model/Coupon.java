@@ -3,6 +3,7 @@ package com.senla.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -21,9 +22,9 @@ public class Coupon {
     @Column
     private String name;
     @Column(name = "start_date", columnDefinition = "DATE")
-    private Date startDate;
+    private LocalDate startDate;
     @Column(name = "end_date", columnDefinition = "DATE")
-    private Date endDate;
+    private LocalDate endDate;
     @Column
     private BigDecimal discount;
     @Column

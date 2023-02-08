@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class User {
     @Column
     private String email;
     @Column(columnDefinition = "DATE")
-    private Date birthday;
+    private LocalDate birthday;
     @Column
     private BigDecimal score;
     @Column(name = "is_active")

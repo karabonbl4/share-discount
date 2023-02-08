@@ -19,8 +19,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("application.properties")
-public class PersistenceJPAConfig {
+@PropertySource("test-application.properties")
+public class TestJPAConfig {
     @Autowired
     private Environment environment;
     @Bean
@@ -41,8 +41,6 @@ public class PersistenceJPAConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
         dataSource.setUrl(environment.getProperty("jdbc.url"));
-        dataSource.setUsername( environment.getProperty("jdbc.user") );
-        dataSource.setPassword( environment.getProperty("jdbc.password") );
         return dataSource;
     }
     @Bean

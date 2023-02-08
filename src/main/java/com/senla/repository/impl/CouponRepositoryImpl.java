@@ -7,13 +7,11 @@ import com.senla.model.Purchase;
 import com.senla.model.Purchase_;
 import com.senla.repository.CouponRepository;
 import com.senla.repository.DefaultRepositoryImpl;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.time.LocalDate;
 
 
 @Repository

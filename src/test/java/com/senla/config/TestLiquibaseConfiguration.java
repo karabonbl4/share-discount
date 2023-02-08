@@ -1,17 +1,14 @@
 package com.senla.config;
 
 import liquibase.integration.spring.SpringLiquibase;
-import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Properties;
-
 @Configuration
-public class LiquibaseConfiguration {
+public class TestLiquibaseConfiguration {
     @Autowired
-    private PersistenceJPAConfig connectionHolder;
+    private TestJPAConfig connectionHolder;
 
     @Bean
     public SpringLiquibase liquibase(){
