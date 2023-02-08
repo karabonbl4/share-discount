@@ -15,7 +15,5 @@ public class Application {
         PurchaseController purchaseController = applicationContext.getBean(PurchaseController.class);
         String purchaseById = purchaseController.findById("1");
         System.out.println(couponController.getCouponByPurchase(purchaseById));
-
-
     }
 }

@@ -35,9 +35,7 @@ public abstract class DefaultRepositoryImpl<T, ID> implements DefaultRepository<
     public T findById(ID id) {
         EntityManager entityManager = entityManagerFactoryBean.getNativeEntityManagerFactory().createEntityManager();
 
-        T t = entityManager.find(this.entityClass, id);
-
-        return t;
+        return entityManager.find(this.entityClass, id);
     }
     @SuppressWarnings("unchecked")
     @Override
