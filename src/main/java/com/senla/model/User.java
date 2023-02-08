@@ -23,5 +23,5 @@ public class User extends Entity {
     private List<Purchase> purchases;
     private List<Role> roles;
     private List<Coupon> coupons;
-
+    private List<DiscountCard> cards;
 }

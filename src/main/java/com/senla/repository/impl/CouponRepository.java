@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -49,8 +50,8 @@ public class CouponRepository implements CustomRepository<Coupon> {
                 users.add(coupon.getUsers().get(0));
                 purchases.add(coupon.getPurchases().get(0));
             }
-            Objects.requireNonNull(coupon).setPurchases(purchases.stream().toList());
-            Objects.requireNonNull(coupon).setUsers(users.stream().toList());
+            Objects.requireNonNull(coupon).setPurchases(purchases.stream().collect(Collectors.toList()));
+            Objects.requireNonNull(coupon).setUsers(users.stream().collect(Collectors.toList()));
             preparedStatement.close();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

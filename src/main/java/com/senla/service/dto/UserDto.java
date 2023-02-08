@@ -25,4 +25,5 @@ public class UserDto {
     private List<PurchaseDto> purchases;
     private List<RoleDto> roles;
     private List<CouponDto> coupons;
+    private List<DiscountCardDto> cards;
 }

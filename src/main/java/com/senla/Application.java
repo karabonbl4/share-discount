@@ -3,7 +3,9 @@ package com.senla;
 import com.senla.config.TestThread;
 import com.senla.controller.CouponController;
 import com.senla.controller.TrademarkController;
+import com.senla.controller.UserController;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -13,7 +15,9 @@ public class Application {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(Application.class);
         CouponController couponController = applicationContext.getBean(CouponController.class);
-        System.out.println(couponController.findById("1"));
+        UserController userController = applicationContext.getBean(UserController.class);
+        System.out.println(userController.findById("1"));
+//        System.out.println(couponController.findById("1"));
 //        TrademarkController trademarkController = applicationContext.getBean(TrademarkController.class);
 //        System.out.println(trademarkController.findById("1"));
 //        Thread testThread = new Thread(new TestThread(applicationContext.getBean(CouponController.class)), "testThread") ;
