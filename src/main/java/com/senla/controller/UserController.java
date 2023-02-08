@@ -21,4 +21,21 @@ public class UserController {
         UserDto byId = userService.findById(lId);
         return objectMapper.writeValueAsString(byId);
     }
+    @SneakyThrows
+    public String update(String user){
+        UserDto userDto = objectMapper.readValue(user, UserDto.class);
+        UserDto update = userService.update(userDto);
+        return objectMapper.writeValueAsString(update);
+    }
+    @SneakyThrows
+    public String save(String user){
+        UserDto userDto = objectMapper.readValue(user, UserDto.class);
+        UserDto save = userService.save(userDto);
+        return objectMapper.writeValueAsString(save);
+    }
+    @SneakyThrows
+    public boolean delete(String user){
+        UserDto userDto = objectMapper.readValue(user, UserDto.class);
+        return userService.delete(userDto);
+    }
 }

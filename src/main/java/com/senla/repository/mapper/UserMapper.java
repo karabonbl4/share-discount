@@ -23,7 +23,7 @@ public class UserMapper {
                 .surName(resultSet.getString(3))
                 .phoneNumber(resultSet.getString(4))
                 .email(resultSet.getString(5))
-                .birthday(Objects.requireNonNullElse(resultSet.getDate(6), Date.valueOf(LocalDate.now())))
+                .birthday(Objects.requireNonNull(resultSet.getDate(6).toLocalDate()))
                 .score(resultSet.getBigDecimal(7))
                 .isActive(resultSet.getBoolean(8))
                 .build();

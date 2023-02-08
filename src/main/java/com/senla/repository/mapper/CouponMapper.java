@@ -36,7 +36,7 @@ public class CouponMapper {
                     .surName(resultSet.getString(14))
                     .phoneNumber(resultSet.getString(15))
                     .email(resultSet.getString(16))
-                    .birthday(Objects.requireNonNullElse(resultSet.getDate(17), Date.valueOf(LocalDate.now())))
+                    .birthday(Objects.requireNonNullElse(resultSet.getDate(17).toLocalDate(), LocalDate.now()))
                     .score(resultSet.getBigDecimal(18))
                     .isActive(resultSet.getBoolean(19))
                     .build();
@@ -59,7 +59,7 @@ public class CouponMapper {
                         .surName(resultSet.getString(29))
                         .phoneNumber(resultSet.getString(30))
                         .email(resultSet.getString(31))
-                        .birthday(Objects.requireNonNull(resultSet.getDate(32)))
+                        .birthday(Objects.requireNonNull(resultSet.getDate(32).toLocalDate()))
                         .score(resultSet.getBigDecimal(33))
                         .isActive(resultSet.getBoolean(34))
                         .build();

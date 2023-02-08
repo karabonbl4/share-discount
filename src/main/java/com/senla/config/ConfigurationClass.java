@@ -34,6 +34,7 @@ public class ConfigurationClass {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.findAndRegisterModules();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         objectMapper.setDateFormat(df);
         return objectMapper;
