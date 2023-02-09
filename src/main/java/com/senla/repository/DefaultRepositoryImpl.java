@@ -6,6 +6,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public abstract class DefaultRepositoryImpl<T, ID> implements DefaultRepository<
     @Override
     public List<T> findAll() {
         EntityManager entityManager = entityManagerFactoryBean.getNativeEntityManagerFactory().createEntityManager();
-        return entityManager.createQuery("from" + entityClass.getName()).getResultList();
+        return entityManager.createQuery("from " + entityClass.getName()).getResultList();
     }
     @Override
     public void update(T entity) {

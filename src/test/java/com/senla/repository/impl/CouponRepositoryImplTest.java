@@ -1,8 +1,6 @@
 package com.senla.repository.impl;
 
 import com.senla.Application;
-import com.senla.config.ConfigurationClass;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.TestJPAConfig;
 import com.senla.model.Coupon;
 import com.senla.model.Purchase;
@@ -24,9 +22,9 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
-        classes = {TestJPAConfig.class, ConfigurationClass.class, TestLiquibaseConfiguration.class, Application.class},
+        classes = {TestJPAConfig.class,
+        Application.class},
         loader = AnnotationConfigContextLoader.class)
-
 public class CouponRepositoryImplTest {
     @Autowired
     private CouponRepository couponRepository;
@@ -39,7 +37,7 @@ public class CouponRepositoryImplTest {
                 .name("coupon1")
                 .startDate(LocalDate.parse("2011-11-11"))
                 .endDate(LocalDate.parse("2011-11-12"))
-                .discount(BigDecimal.valueOf(0.51))
+                .discount(BigDecimal.valueOf(0.53))
                 .used(false)
                 .build();
 
@@ -59,14 +57,54 @@ public class CouponRepositoryImplTest {
 
     @Transactional
     @Test
-    public void save() {
-        Coupon coupon = Coupon.builder()
-                .id(99999L)
+    public void save_coupon() {
+        int couponsBeforeAddingElseOne = couponRepository.findAll().size();
+        Coupon expectCoupon = Coupon.builder()
                 .name("testCoupon")
+                .startDate(LocalDate.parse("2020-10-15"))
+                .endDate(LocalDate.parse("2020-10-17"))
+                .discount(BigDecimal.valueOf(0.51))
+                .used(true)
+                .trademarkId(Trademark.builder().id(1L).title("OZ").build())
                 .build();
-        couponRepository.save(coupon);
-        Coupon actualCoupon = couponRepository.findById(99999L);
+        couponRepository.save(expectCoupon);
+        int couponsAfterAdding = couponRepository.findAll().size();
 
-        assertNotNull(actualCoupon);
+        assertEquals(couponsBeforeAddingElseOne+1, couponsAfterAdding);
+    }
+
+    @Transactional
+    @Test
+    public void update_coupon(){
+        Coupon actualCouponFromDB = couponRepository.findById(1L);
+        String oldName = actualCouponFromDB.getName();
+
+        actualCouponFromDB.setName("someTestName");
+        couponRepository.update(actualCouponFromDB);
+
+        String actualCouponName = couponRepository.findById(1L).getName();
+
+        actualCouponFromDB.setName(oldName);
+        couponRepository.update(actualCouponFromDB);
+
+        assertEquals("someTestName", actualCouponName);
+    }
+
+    @Transactional
+    @Test
+    public void delete_coupon(){
+        int couponsBeforeDeleting = couponRepository.findAll().size();
+        Coupon deletingCoupon = Coupon.builder()
+                .name("testCoupon")
+                .startDate(LocalDate.parse("2020-10-15"))
+                .endDate(LocalDate.parse("2020-10-17"))
+                .discount(BigDecimal.valueOf(0.51))
+                .used(true)
+                .trademarkId(Trademark.builder().id(1L).title("OZ").build())
+                .build();
+        couponRepository.delete(deletingCoupon);
+        int couponsAfterRemoving = couponRepository.findAll().size();
+
+        assertEquals(couponsBeforeDeleting, couponsAfterRemoving);
     }
 }

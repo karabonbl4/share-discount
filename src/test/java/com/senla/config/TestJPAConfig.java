@@ -3,6 +3,7 @@ package com.senla.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -15,11 +16,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("test-application.properties")
+@PropertySource({"classpath:test-application.properties"})
 public class TestJPAConfig {
     @Autowired
     private Environment environment;
@@ -39,7 +41,7 @@ public class TestJPAConfig {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
+        dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("jdbc.driver")));
         dataSource.setUrl(environment.getProperty("jdbc.url"));
         return dataSource;
     }

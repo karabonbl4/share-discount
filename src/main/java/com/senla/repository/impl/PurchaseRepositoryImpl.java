@@ -15,7 +15,7 @@ public class PurchaseRepositoryImpl extends DefaultRepositoryImpl<Purchase, Long
     @Override
     public Purchase findByUserId(Long id) {
         EntityManager entityManager = super.entityManagerFactoryBean.getNativeEntityManagerFactory().createEntityManager();
-        Query from_purchase = entityManager.createQuery("from Purchase where User.id = :id");
+        Query from_purchase = entityManager.createQuery("from Purchase p where p.userId.id = :id");
         from_purchase.setParameter("id", id);
         return (Purchase) from_purchase.getSingleResult();
     }
