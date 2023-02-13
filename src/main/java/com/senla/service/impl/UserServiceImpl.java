@@ -1,5 +1,6 @@
 package com.senla.service.impl;
 
+import com.senla.annotation.Transaction;
 import com.senla.model.User;
 import com.senla.repository.impl.UserRepository;
 import com.senla.service.UserService;
@@ -9,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,36 +17,44 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
+    @Transaction
     @Override
     public UserDto save(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        User user1 = userRepository.saveOrUpdate(user);
-        return modelMapper.map(user1, UserDto.class);
+        User map = modelMapper.map(userDto, User.class);
+        User user = userRepository.saveOrUpdate(map);
+        return modelMapper.map(user, UserDto.class);
+
     }
 
+    @Transaction
     @Override
     public UserDto findById(Long id) {
-        User user = userRepository.findById(id);
-        return modelMapper.map(user, UserDto.class);
+        User byId = userRepository.findById(id);
+        return modelMapper.map(byId, UserDto.class);
     }
 
+    @Transaction
     @Override
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+        return null;
     }
 
+    @Transaction
     @Override
     public boolean delete(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        userRepository.delete(user);
-        return userRepository.findById(userDto.getId()) == null;
+        User map = modelMapper.map(userDto, User.class);
+        userRepository.delete(map);
+        if (userRepository.findById(userDto.getId()) == null) {
+            return true;
+        }
+        return false;
     }
 
+    @Transaction
     @Override
     public UserDto update(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        return modelMapper.map(userRepository.saveOrUpdate(user), UserDto.class);
+        User map = modelMapper.map(userDto, User.class);
+        User user = userRepository.saveOrUpdate(map);
+        return modelMapper.map(user, UserDto.class);
     }
 }

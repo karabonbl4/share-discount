@@ -1,9 +1,6 @@
 package com.senla.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Trademark extends Entity {
     private Long id;
     private String title;
@@ -18,4 +16,8 @@ public class Trademark extends Entity {
     private List<Coupon> coupons;
     private List<DiscountPolicy> discountPolicies;
 
+    public Trademark(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

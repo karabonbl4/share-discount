@@ -1,7 +1,7 @@
 package com.senla.repository.impl;
 
-import com.senla.repository.DefaultRepository;
 import com.senla.model.DiscountCard;
+import com.senla.repository.DefaultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

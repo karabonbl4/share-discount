@@ -4,18 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Scope;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
 @Configuration
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class ConfigurationClass {
 
     @Bean
-    public ModelMapper modelMapper(){
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setFieldMatchingEnabled(true)
@@ -23,13 +28,23 @@ public class ConfigurationClass {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper;
     }
+
     @Bean
-    public ObjectMapper objectMapper(){
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+        objectMapper.findAndRegisterModules();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         objectMapper.setDateFormat(df);
         return objectMapper;
     }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public ConnectionHolder connectionHolder() {
+        return new ConnectionHolder();
+    }
+
 
 }

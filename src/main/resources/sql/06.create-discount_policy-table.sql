@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.discount_policy
     trademark_id 		BIGINT NOT NULL,
     CONSTRAINT discount_policy_id_pk PRIMARY KEY (id),
     CONSTRAINT dp_trademark_fk FOREIGN KEY (trademark_id)
-    	REFERENCES public.trademark (id) MATCH SIMPLE,
+    	REFERENCES public.trademark (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT dp_min_discount_check CHECK (min_discount >=0 and min_discount <= 1),
-    CONSTRAINT dp_man_discount_check CHECK (max_discount >=0 and max_discount <= 1),
+    CONSTRAINT dp_man_discount_check CHECK (max_discount >=0 and max_discount <= 1)
 );

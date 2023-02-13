@@ -1,6 +1,5 @@
 package com.senla.service;
 
-import com.senla.service.dto.CouponDto;
 import com.senla.service.dto.DiscountCardDto;
 
 import java.util.List;

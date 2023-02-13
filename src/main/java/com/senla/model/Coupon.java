@@ -1,9 +1,6 @@
 package com.senla.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Coupon extends Entity {
     private Long id;
     private String name;
@@ -24,11 +22,4 @@ public class Coupon extends Entity {
     private List<Purchase> purchases;
     private List<User> users;
 
-    @Override
-    public String toString() {
-        return "Coupon{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
