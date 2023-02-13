@@ -1,18 +1,21 @@
 package com.senla.service.impl;
 
-import com.senla.model.DiscountPolicy;
-import com.senla.repository.DiscountPolicyRepository;
+import com.senla.dao.DiscountPolicyRepository;
+import com.senla.exceptions.NotFoundException;
+import com.senla.model.entity.DiscountPolicy;
 import com.senla.service.DiscountPolicyService;
-import com.senla.service.dto.DiscountPolicyDto;
+import com.senla.model.dto.DiscountPolicyDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     private final ModelMapper modelMapper;
     private final DiscountPolicyRepository discountPolicyRepository;
@@ -25,8 +28,8 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     }
 
     @Override
-    public DiscountPolicyDto findById(Long id) {
-        DiscountPolicy discountPolicy = discountPolicyRepository.findById(id);
+    public DiscountPolicyDto findById(Long id) throws NotFoundException{
+        DiscountPolicy discountPolicy = discountPolicyRepository.findById(id).orElseThrow(NotFoundException::new);
         return modelMapper.map(discountPolicy, DiscountPolicyDto.class);
     }
 
@@ -38,15 +41,22 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     }
 
     @Override
-    public boolean delete(DiscountPolicyDto discountPolicyDto) {
+    public void delete(Long discountPolicyId) {
+        DiscountPolicyDto discountPolicyDto = findById(discountPolicyId);
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
         discountPolicyRepository.delete(discountPolicy);
-        return discountPolicyRepository.findById(discountPolicyDto.getId()) == null;
     }
 
     @Override
     public void update(DiscountPolicyDto discountPolicyDto) {
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        discountPolicyRepository.update(discountPolicy);
+        discountPolicyRepository.saveAndFlush(discountPolicy);
+    }
+
+    @Override
+    public List<DiscountPolicyDto> findByTrademarkId(Long id) {
+        return discountPolicyRepository.findByTrademark_Id(id).stream()
+                .map(discountPolicy -> modelMapper.map(discountPolicy, DiscountPolicyDto.class))
+                .collect(Collectors.toList());
     }
 }

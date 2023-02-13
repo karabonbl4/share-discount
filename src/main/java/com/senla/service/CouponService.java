@@ -1,13 +1,16 @@
 package com.senla.service;
 
-import com.senla.service.dto.CouponDto;
-import com.senla.service.dto.PurchaseDto;
+import com.senla.model.entity.Purchase;
+import com.senla.model.dto.CouponDto;
+
+import java.util.List;
 
 
 public interface CouponService {
     void save(CouponDto couponDto);
     CouponDto findById(Long id);
+    List<CouponDto> findAll();
     void update(CouponDto couponDto);
-    void delete(CouponDto couponDto);
-    CouponDto findByPurchase(PurchaseDto purchase);
+    void delete(Long couponId);
+    CouponDto findByPurchaseId(Long id);
 }

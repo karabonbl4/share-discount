@@ -1,6 +1,6 @@
 package com.senla.service;
 
-import com.senla.service.dto.DiscountPolicyDto;
+import com.senla.model.dto.DiscountPolicyDto;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ public interface DiscountPolicyService {
     void save(DiscountPolicyDto discountPolicyDto);
     DiscountPolicyDto findById(Long id);
     List<DiscountPolicyDto> findAll();
-    boolean delete(DiscountPolicyDto discountPolicyDto);
+    void delete(Long discountPolicyId);
     void update(DiscountPolicyDto discountPolicyDto);
+    List<DiscountPolicyDto> findByTrademarkId(Long id);
 }

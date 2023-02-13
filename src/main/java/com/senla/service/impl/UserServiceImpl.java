@@ -1,42 +1,53 @@
 package com.senla.service.impl;
 
-import com.senla.repository.UserRepository;
+import com.senla.dao.UserRepository;
+import com.senla.exceptions.NotFoundException;
+import com.senla.model.entity.User;
 import com.senla.service.UserService;
-import com.senla.service.dto.UserDto;
+import com.senla.model.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
     @Override
-    public UserDto save(UserDto userDto) {
-        return null;
+    public void save(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
+        userRepository.save(user);
     }
 
     @Override
-    public UserDto findById(Long id) {
-        return null;
+    public UserDto findById(Long id) throws NotFoundException{
+        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     public List<UserDto> findAll() {
-        return null;
+        return userRepository.findAll().stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean delete(UserDto userDto) {
-        return false;
+    public void delete(Long userId) {
+        User user = userRepository.getReferenceById(userId);
+        userRepository.delete(user);
     }
 
     @Override
-    public UserDto update(UserDto userDto) {
-        return null;
+    public void update(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
+        userRepository.saveAndFlush(user);
     }
 }

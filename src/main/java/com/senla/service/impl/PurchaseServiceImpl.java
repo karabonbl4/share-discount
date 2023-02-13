@@ -1,18 +1,21 @@
 package com.senla.service.impl;
 
-import com.senla.model.Purchase;
-import com.senla.repository.PurchaseRepository;
+import com.senla.dao.PurchaseRepository;
+import com.senla.exceptions.NotFoundException;
+import com.senla.model.entity.Purchase;
 import com.senla.service.PurchaseService;
-import com.senla.service.dto.PurchaseDto;
+import com.senla.model.dto.PurchaseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PurchaseServiceImpl implements PurchaseService {
     private final ModelMapper modelMapper;
     private final PurchaseRepository purchaseRepository;
@@ -25,8 +28,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public PurchaseDto findById(Long id) {
-        Purchase purchase = purchaseRepository.findById(id);
+    public PurchaseDto findById(Long id) throws NotFoundException{
+        Purchase purchase = purchaseRepository.findById(id).orElseThrow(NotFoundException::new);
         return modelMapper.map(purchase, PurchaseDto.class);
     }
 
@@ -38,7 +41,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void delete(PurchaseDto purchaseDto) {
+    public void delete(Long purchaseId) {
+        PurchaseDto purchaseDto = findById(purchaseId);
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
         purchaseRepository.delete(purchase);
     }
@@ -46,6 +50,20 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public void update(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.update(purchase);
+        purchaseRepository.saveAndFlush(purchase);
+    }
+
+    @Override
+    public List<PurchaseDto> findByCardId(Long id) {
+        return purchaseRepository.findByCard_Id(id).stream()
+                .map(purchase -> modelMapper.map(purchase, PurchaseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PurchaseDto> findByUserId(Long id) {
+        return purchaseRepository.findByUser_Id(id).stream()
+                .map(purchase -> modelMapper.map(purchase, PurchaseDto.class))
+                .collect(Collectors.toList());
     }
 }

@@ -1,39 +1,62 @@
 package com.senla.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senla.model.dto.DiscountCardDto;
 import com.senla.service.DiscountCardService;
-import com.senla.service.dto.DiscountCardDto;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/cards")
 public class DiscountCardController {
-    private final ObjectMapper objectMapper;
-    private final DiscountCardService discountCardService;
-    @SneakyThrows
-    public String findById(String id){
-        Long l = Long.parseLong(id);
-        DiscountCardDto discountCardDto = discountCardService.findById(l);
-        return objectMapper.writeValueAsString(discountCardDto);
+
+    private final DiscountCardService cardService;
+
+    @GetMapping
+    public List<DiscountCardDto> getAllCards() {
+        return cardService.findAll();
     }
 
-    @SneakyThrows
-    public void create(String newDiscountCard){
-        DiscountCardDto newDiscountCardDto = objectMapper.readValue(newDiscountCard, DiscountCardDto.class);
-        discountCardService.save(newDiscountCardDto);
+    @GetMapping(value = "/{id}")
+    public DiscountCardDto getCardById(@PathVariable(name = "id") Long cardId) {
+        return cardService.findById(cardId);
     }
 
-    @SneakyThrows
-    public void delete(String discountCard){
-        DiscountCardDto DiscountCardDto = objectMapper.readValue(discountCard, DiscountCardDto.class);
-        discountCardService.delete(DiscountCardDto);
+
+    @GetMapping(value = "/user/{id}")
+    public List<DiscountCardDto> getCardByUserId(@PathVariable(name = "id") Long userId) {
+        return cardService.getCardsByUserId(userId);
     }
 
-    @SneakyThrows
-    public void update(String discountCard){
-        DiscountCardDto discountCardDto = objectMapper.readValue(discountCard, DiscountCardDto.class);
-        discountCardService.update(discountCardDto);
+    @PostMapping(value = "/create")
+    public ResponseEntity<?> createNewCard(@RequestBody DiscountCardDto newCard) {
+        cardService.save(newCard);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(newCard.getName())
+                .toUri());
+        return new ResponseEntity<>(newCard, headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateCard(@RequestBody DiscountCardDto discountCard) {
+        cardService.update(discountCard);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(discountCard.getName())
+                .toUri());
+        return new ResponseEntity<>(discountCard, headers, HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping(value = "delete/{id}")
+    public ResponseEntity<?> deleteCard(@PathVariable(name = "id") Long discountCardId) {
+        cardService.delete(discountCardId);
+        return new ResponseEntity<>("Card deleted successfully.", HttpStatus.ACCEPTED);
     }
 }

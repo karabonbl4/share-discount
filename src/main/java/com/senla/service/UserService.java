@@ -1,13 +1,13 @@
 package com.senla.service;
 
-import com.senla.service.dto.UserDto;
+import com.senla.model.dto.UserDto;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto save(UserDto userDto);
+    void save(UserDto userDto);
     UserDto findById(Long id);
     List<UserDto> findAll();
-    boolean delete(UserDto userDto);
-    UserDto update(UserDto userDto);
+    void delete(Long userId);
+    void update(UserDto userDto);
 }
