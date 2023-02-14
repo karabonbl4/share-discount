@@ -9,10 +9,6 @@ CREATE TABLE IF NOT EXISTS public.coupon
     trademark_id 		BIGINT NOT NULL,
     CONSTRAINT coupon_id_pk PRIMARY KEY (id),
     CONSTRAINT coupon_trademark_fk FOREIGN KEY (trademark_id)
-<<<<<<< HEAD
     	REFERENCES public.trademark (id) ON UPDATE CASCADE ON DELETE CASCADE,
-=======
-    	REFERENCES public.trademark (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
->>>>>>> main
     CONSTRAINT coupon_discount_check CHECK (discount >=0 and discount <= 1)
 );

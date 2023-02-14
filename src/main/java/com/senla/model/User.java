@@ -28,13 +28,9 @@ public class User {
     private String phoneNumber;
     @Column
     private String email;
-<<<<<<< HEAD
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
     @Column
-=======
-    private LocalDate birthday;
->>>>>>> main
     private BigDecimal score;
     @Column(name = "is_active")
     private Boolean isActive;
@@ -45,14 +41,9 @@ public class User {
     private List<Role> roles;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private List<Coupon> coupons;
-<<<<<<< HEAD
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
     private List<DiscountCard> cards;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "admin_trademark", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trademark_id"))
     private List<Trademark> trademarks;
-
-=======
-    private List<DiscountCard> cards;
->>>>>>> main
 }

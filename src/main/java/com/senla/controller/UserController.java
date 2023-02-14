@@ -24,18 +24,16 @@ public class UserController {
     @SneakyThrows
     public String update(String user){
         UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        UserDto update = userService.update(userDto);
-        return objectMapper.writeValueAsString(update);
+        return objectMapper.writeValueAsString(userDto);
     }
     @SneakyThrows
     public String save(String user){
         UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        UserDto save = userService.save(userDto);
-        return objectMapper.writeValueAsString(save);
+        return objectMapper.writeValueAsString(userDto);
     }
     @SneakyThrows
-    public boolean delete(String user){
+    public void delete(String user){
         UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        return userService.delete(userDto);
+        userService.delete(userDto);
     }
 }
