@@ -18,6 +18,7 @@ public class DiscountCardDto {
     private String name;
     private Long number;
     private BigDecimal discount;
+    @JsonIgnore
     private UserDto ownerId;
     private DiscountPolicyDto discountPolicyId;
     @JsonIgnore
