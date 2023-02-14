@@ -21,6 +21,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouponDto {
+    public CouponDto(Long id){
+        this.id = id;
+    }
     private Long id;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd")

@@ -21,9 +21,10 @@ public class CouponServiceImpl implements CouponService {
     private final ModelMapper modelMapper;
     private final CouponRepository couponRepository;
     @Override
-    public void save(CouponDto couponDto) {
+    public CouponDto save(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
-        couponRepository.save(coupon);
+        Coupon savedCoupon = couponRepository.save(coupon);
+        return modelMapper.map(savedCoupon, CouponDto.class);
     }
 
     @Override
@@ -42,8 +43,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public void delete(Long couponId) {
-        CouponDto couponDto = findById(couponId);
-        Coupon coupon = modelMapper.map(couponDto, Coupon.class);
+        Coupon coupon = couponRepository.getReferenceById(couponId);
         couponRepository.delete(coupon);
     }
 
@@ -54,8 +54,9 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public void update(CouponDto couponDto) {
+    public CouponDto update(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
-        couponRepository.saveAndFlush(coupon);
+        Coupon returnedCoupon = couponRepository.saveAndFlush(coupon);
+        return modelMapper.map(returnedCoupon, CouponDto.class);
     }
 }
