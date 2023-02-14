@@ -21,10 +21,10 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     private final DiscountPolicyRepository discountPolicyRepository;
 
     @Override
-    public void save(DiscountPolicyDto discountPolicyDto) {
+    public DiscountPolicyDto save(DiscountPolicyDto discountPolicyDto) {
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        discountPolicyRepository.save(discountPolicy);
-
+        DiscountPolicy returnedSavePolicy = discountPolicyRepository.save(discountPolicy);
+        return modelMapper.map(returnedSavePolicy, DiscountPolicyDto.class);
     }
 
     @Override
@@ -42,15 +42,15 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
 
     @Override
     public void delete(Long discountPolicyId) {
-        DiscountPolicyDto discountPolicyDto = findById(discountPolicyId);
-        DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        discountPolicyRepository.delete(discountPolicy);
+        DiscountPolicy policyById = discountPolicyRepository.getReferenceById(discountPolicyId);
+        discountPolicyRepository.delete(policyById);
     }
 
     @Override
-    public void update(DiscountPolicyDto discountPolicyDto) {
+    public DiscountPolicyDto update(DiscountPolicyDto discountPolicyDto) {
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        discountPolicyRepository.saveAndFlush(discountPolicy);
+        DiscountPolicy returnedSavePolicy = discountPolicyRepository.saveAndFlush(discountPolicy);
+        return modelMapper.map(returnedSavePolicy, DiscountPolicyDto.class);
     }
 
     @Override

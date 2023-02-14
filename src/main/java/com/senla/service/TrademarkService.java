@@ -6,9 +6,9 @@ import java.util.List;
 
 
 public interface TrademarkService {
-    void save(TrademarkDto trademarkDto);
+    TrademarkDto save(TrademarkDto trademarkDto);
     TrademarkDto findById(Long id);
     void delete(Long trademarkId);
-    void update(TrademarkDto trademarkDto);
+    TrademarkDto update(TrademarkDto trademarkDto);
     List<TrademarkDto> findAll();
 }

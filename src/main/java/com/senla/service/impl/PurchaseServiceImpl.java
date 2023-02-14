@@ -22,9 +22,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 
     @Override
-    public void save(PurchaseDto purchaseDto) {
+    public PurchaseDto save(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.save(purchase);
+        Purchase returnedPurchaseAfterSaving = purchaseRepository.save(purchase);
+        return modelMapper.map(returnedPurchaseAfterSaving, PurchaseDto.class);
     }
 
     @Override
@@ -42,15 +43,15 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public void delete(Long purchaseId) {
-        PurchaseDto purchaseDto = findById(purchaseId);
-        Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.delete(purchase);
+        Purchase purchaseForDeleting = purchaseRepository.getReferenceById(purchaseId);
+        purchaseRepository.delete(purchaseForDeleting);
     }
 
     @Override
-    public void update(PurchaseDto purchaseDto) {
+    public PurchaseDto update(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.saveAndFlush(purchase);
+        Purchase returnedPurchaseAfterUpdating = purchaseRepository.saveAndFlush(purchase);
+        return modelMapper.map(returnedPurchaseAfterUpdating, PurchaseDto.class);
     }
 
     @Override

@@ -22,9 +22,10 @@ public class TrademarkServiceImpl implements TrademarkService {
     private final TrademarkRepository trademarkRepository;
 
     @Override
-    public void save(TrademarkDto trademarkDto) {
+    public TrademarkDto save(TrademarkDto trademarkDto) {
         Trademark trademark = modelMapper.map(trademarkDto, Trademark.class);
-        trademarkRepository.save(trademark);
+        Trademark returnedTrademarkAfterSaving = trademarkRepository.save(trademark);
+        return modelMapper.map(returnedTrademarkAfterSaving, TrademarkDto.class);
     }
 
     @Override
@@ -40,9 +41,10 @@ public class TrademarkServiceImpl implements TrademarkService {
     }
 
     @Override
-    public void update(TrademarkDto trademarkDto) {
+    public TrademarkDto update(TrademarkDto trademarkDto) {
         Trademark trademark = modelMapper.map(trademarkDto, Trademark.class);
-        trademarkRepository.saveAndFlush(trademark);
+        Trademark returnedTrademarkAfterUpdating = trademarkRepository.saveAndFlush(trademark);
+        return modelMapper.map(returnedTrademarkAfterUpdating, TrademarkDto.class);
     }
 
     @Override

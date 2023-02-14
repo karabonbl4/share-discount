@@ -21,9 +21,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public void save(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
-        userRepository.save(user);
+        User returnedUserAfterSaving = userRepository.save(user);
+        return modelMapper.map(returnedUserAfterSaving, UserDto.class);
     }
 
     @Override
@@ -46,8 +47,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserDto userDto) {
+    public UserDto update(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
-        userRepository.saveAndFlush(user);
+        User returnedUserAfterUpdating = userRepository.saveAndFlush(user);
+        return modelMapper.map(returnedUserAfterUpdating, UserDto.class);
     }
 }

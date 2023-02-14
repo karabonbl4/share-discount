@@ -20,8 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static org.junit.Assert.*;
-
 @ExtendWith(MockitoExtension.class)
 public class CouponServiceImplTest {
 
@@ -44,8 +42,13 @@ public class CouponServiceImplTest {
         final CouponDto couponDto = mock(CouponDto.class);
         final Coupon mapedCoupon = mock(Coupon.class);
         when(modelMapper.map(couponDto, Coupon.class)).thenReturn(mapedCoupon);
-        couponService.save(couponDto);
+        when(couponRepository.save(mapedCoupon)).thenReturn(mapedCoupon);
+        when(modelMapper.map(mapedCoupon, CouponDto.class)).thenReturn(couponDto);
 
+        CouponDto savedCoupon = couponService.save(couponDto);
+
+        assertNotNull(savedCoupon);
+        assertEquals(couponDto, savedCoupon);
         verify(couponRepository).save(mapedCoupon);
     }
 
@@ -96,7 +99,7 @@ public class CouponServiceImplTest {
     }
 
     @Test
-    public void chouldUpdateCouponSuccessfully() {
+    public void shouldUpdateCouponSuccessfully() {
         final CouponDto couponDto = mock(CouponDto.class);
         final Coupon mapedCoupon = mock(Coupon.class);
         when(modelMapper.map(couponDto, Coupon.class)).thenReturn(mapedCoupon);
@@ -108,6 +111,5 @@ public class CouponServiceImplTest {
         assertNotNull(actualCoupon);
         assertEquals(couponDto, actualCoupon);
         verify(couponRepository).saveAndFlush(mapedCoupon);
-
     }
 }

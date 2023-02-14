@@ -21,9 +21,10 @@ public class DiscountCardServiceImpl implements DiscountCardService {
     private final DiscountCardRepository discountCardRepository;
 
     @Override
-    public void save(DiscountCardDto discountCardDto) {
+    public DiscountCardDto save(DiscountCardDto discountCardDto) {
         DiscountCard discountCard = modelMapper.map(discountCardDto, DiscountCard.class);
-        discountCardRepository.save(discountCard);
+        DiscountCard savedCard = discountCardRepository.save(discountCard);
+        return modelMapper.map(savedCard, DiscountCardDto.class);
     }
 
     @Override
@@ -41,15 +42,15 @@ public class DiscountCardServiceImpl implements DiscountCardService {
 
     @Override
     public void delete(Long id) {
-        DiscountCardDto deletedCard = findById(id);
-        DiscountCard discountCard = modelMapper.map(deletedCard, DiscountCard.class);
-        discountCardRepository.delete(discountCard);
+        DiscountCard deletedCard = discountCardRepository.getReferenceById(id);
+        discountCardRepository.delete(deletedCard);
     }
 
     @Override
-    public void update(DiscountCardDto discountCardDto) {
+    public DiscountCardDto update(DiscountCardDto discountCardDto) {
         DiscountCard discountCard = modelMapper.map(discountCardDto, DiscountCard.class);
-        discountCardRepository.saveAndFlush(discountCard);
+        DiscountCard returnedCard = discountCardRepository.saveAndFlush(discountCard);
+        return modelMapper.map(returnedCard, DiscountCardDto.class);
     }
 
     @Override
