@@ -34,7 +34,10 @@ public class PurchaseRepositoryTest {
         List<Purchase> actualPurchases = purchaseRepository.findByCard_Id(1L);
 
         String expectPurchaseName = "purchase2";
-        String actualPurchaseName = actualPurchases.stream().findFirst().get().getName();
+        String actualPurchaseName = actualPurchases.stream()
+                .findFirst()
+                .orElseThrow()
+                .getName();
 
         assertEquals(expectPurchaseName, actualPurchaseName);
     }
@@ -44,7 +47,10 @@ public class PurchaseRepositoryTest {
     public void findByUser_Id() {
         List<Purchase> actualPurchases = purchaseRepository.findByUser_Id(1L);
 
-        String actualPurchaseName = actualPurchases.stream().findFirst().get().getName();
+        String actualPurchaseName = actualPurchases.stream()
+                .findFirst()
+                .orElseThrow()
+                .getName();
         String expectPurchaseName = "purchase2";
 
         assertEquals(expectPurchaseName, actualPurchaseName);

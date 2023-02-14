@@ -26,7 +26,10 @@ public class DiscountCardRepositoryTest {
     @Test
     @Transactional
     public void findByOwner_Id() {
-        String actualCardName = repository.findByOwner_Id(1L).stream().findFirst().get().getName();
+        String actualCardName = repository.findByOwner_Id(1L).stream()
+                .findFirst()
+                .orElseThrow()
+                .getName();
 
         String expectCardName = "gold_card";
 

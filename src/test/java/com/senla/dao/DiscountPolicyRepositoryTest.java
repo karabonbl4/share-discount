@@ -27,7 +27,10 @@ public class DiscountPolicyRepositoryTest {
     @Test
     @Transactional
     public void findByTrademark_Id() {
-        String actualPolicyName = repository.findByTrademark_Id(1L).stream().findFirst().get().getTitle();
+        String actualPolicyName = repository.findByTrademark_Id(1L).stream()
+                .findFirst()
+                .orElseThrow()
+                .getTitle();
         String expectPolicyName = "OZpolicy";
 
         assertEquals(expectPolicyName, actualPolicyName);

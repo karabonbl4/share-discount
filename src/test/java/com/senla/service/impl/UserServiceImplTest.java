@@ -1,9 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.UserRepository;
-import com.senla.model.dto.TrademarkDto;
 import com.senla.model.dto.UserDto;
-import com.senla.model.entity.Trademark;
 import com.senla.model.entity.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,6 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -32,6 +29,7 @@ public class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
     private final static Long ID = 1L;
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -98,5 +96,4 @@ public class UserServiceImplTest {
         assertEquals(userDto, actualUser);
         verify(userRepository).saveAndFlush(mapedUser);
     }
-
 }

@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen:5.6.15.Final'
     annotationProcessor "org.projectlombok:lombok:1.18.24"
@@ -44,4 +44,12 @@ dependencies {
     testImplementation 'com.h2database:h2:2.1.214'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.8.0'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.24"
+}
+test {
+    useJUnitPlatform()
 }
