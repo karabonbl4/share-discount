@@ -2,7 +2,9 @@ package com.senla.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,14 +21,14 @@ import java.time.LocalDateTime;
 public class PurchaseDto {
     private Long id;
     private String name;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime transactionDate;
     private BigDecimal sum;
+//    @JsonIgnore
+    private UserDto user;
+//    @JsonIgnore
+    private DiscountCardDto card;
     @JsonIgnore
-    private UserDto userId;
-    @JsonIgnore
-    private DiscountCardDto cardId;
-    @JsonIgnore
-    private CouponDto couponId;
+    private CouponDto coupon;
 }

@@ -1,13 +1,11 @@
 package com.senla.model.entity;
 
-import com.senla.model.entity.*;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@Table(name = "\"user\"")
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

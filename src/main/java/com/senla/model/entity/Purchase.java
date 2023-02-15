@@ -19,7 +19,7 @@ public class Purchase {
     private Long id;
     @Column
     private String name;
-    @Column(name = "transaction_dt", columnDefinition = "DATETIME")
+    @Column(name = "transaction_dt", columnDefinition = "TIMESTAMP")
     private LocalDateTime transactionDate;
     @Column
     private BigDecimal sum;

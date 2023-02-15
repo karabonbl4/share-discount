@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,15 +33,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
 @Sql("classpath:sql/insert_data.sql")
-class DiscountCardControllerTest {
+class PurchaseControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
-    private final static String NEW_CARD = "{\n" +
-            "        \"name\": \"silver_card\",\n" +
-            "        \"number\": 321321,\n" +
-            "        \"discount\": 0.20,\n" +
-            "        \"ownerId\": {\n" +
+    private final static String ROOT_URL = "/purchases";
+    private final static String CONTENT_JSON = "application/json";
+    private final static String NEW_DATA = "{\n" +
+            "        \"name\": \"testPurchase\",\n" +
+            "        \"transactionDate\": \"2023-02-15 15:10:00\",\n" +
+            "        \"sum\": 101.70,\n" +
+            "        \"user\": {\n" +
             "            \"id\": 1,\n" +
             "            \"firstName\": \"Ivan\",\n" +
             "            \"surName\": \"Ivanov\",\n" +
@@ -52,42 +53,31 @@ class DiscountCardControllerTest {
             "            \"score\": 0.00,\n" +
             "            \"isActive\": false\n" +
             "        },\n" +
-            "        \"discountPolicyId\": {\n" +
+            "        \"card\": {\n" +
             "            \"id\": 1,\n" +
-            "            \"title\": \"OZpolicy\",\n" +
-            "            \"minDiscount\": 0.05,\n" +
-            "            \"maxDiscount\": 0.50,\n" +
-            "            \"discountStep\": 0.05,\n" +
-            "            \"trademarkId\": {\n" +
+            "            \"name\": \"gold_card\",\n" +
+            "            \"number\": 123123,\n" +
+            "            \"discount\": 0.30,\n" +
+            "            \"ownerId\": {\n" +
             "                \"id\": 1,\n" +
-            "                \"title\": \"OZ\"\n" +
-            "            }\n" +
-            "        }\n" +
-            "    }";
-    private final static String UPDATING_CARD = "{\n" +
-            "        \"id\": 2,\n" +
-            "        \"name\": \"bronze_card\",\n" +
-            "        \"number\": 258258,\n" +
-            "        \"discount\": 0.10,\n" +
-            "        \"ownerId\": {\n" +
-            "            \"id\": 1,\n" +
-            "            \"firstName\": \"Ivan\",\n" +
-            "            \"surName\": \"Ivanov\",\n" +
-            "            \"phoneNumber\": \"+32311212\",\n" +
-            "            \"email\": \"ivan@ivanov.by\",\n" +
-            "            \"birthday\": null,\n" +
-            "            \"score\": 0.00,\n" +
-            "            \"isActive\": false\n" +
-            "        },\n" +
-            "        \"discountPolicyId\": {\n" +
-            "            \"id\": 1,\n" +
-            "            \"title\": \"OZpolicy\",\n" +
-            "            \"minDiscount\": 0.05,\n" +
-            "            \"maxDiscount\": 0.50,\n" +
-            "            \"discountStep\": 0.05,\n" +
-            "            \"trademarkId\": {\n" +
+            "                \"firstName\": \"Ivan\",\n" +
+            "                \"surName\": \"Ivanov\",\n" +
+            "                \"phoneNumber\": \"+32311212\",\n" +
+            "                \"email\": \"ivan@ivanov.by\",\n" +
+            "                \"birthday\": null,\n" +
+            "                \"score\": 0.00,\n" +
+            "                \"isActive\": false\n" +
+            "            },\n" +
+            "            \"discountPolicyId\": {\n" +
             "                \"id\": 1,\n" +
-            "                \"title\": \"OZ\"\n" +
+            "                \"title\": \"OZpolicy\",\n" +
+            "                \"minDiscount\": 0.05,\n" +
+            "                \"maxDiscount\": 0.50,\n" +
+            "                \"discountStep\": 0.05,\n" +
+            "                \"trademarkId\": {\n" +
+            "                    \"id\": 1,\n" +
+            "                    \"title\": \"OZ\"\n" +
+            "                }\n" +
             "            }\n" +
             "        }\n" +
             "    }";
@@ -104,53 +94,55 @@ class DiscountCardControllerTest {
 
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
-        assertNotNull(webApplicationContext.getBean("discountCardController"));
+        assertNotNull(webApplicationContext.getBean("purchaseController"));
     }
 
     @SneakyThrows
     @Test
-    public void getAllCards_ResponseOk() {
-        mockMvc.perform(get("/cards"))
+    public void getAllPurchases_ResponseOk() {
+        mockMvc.perform(get(ROOT_URL))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+                .andExpect(content().contentType(CONTENT_JSON));
     }
 
     @SneakyThrows
     @Test
-    public void getCardById_ResponseOk() {
-        mockMvc.perform(get("/cards/{id}", "1"))
+    public void getPurchaseById_ResponseOk() {
+        mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType(CONTENT_JSON))
                 .andExpect(jsonPath("$.id").value("1"));
     }
 
     @SneakyThrows
     @Test
-    public void getCardByUser_ResponseOk() {
-        mockMvc.perform(get("/cards/user/{id}", "1"))
+    public void getPurchaseByUser_ResponseOk() {
+        mockMvc.perform(get(ROOT_URL.concat("/user/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+                .andExpect(content().contentType(CONTENT_JSON));
     }
 
     @SneakyThrows
     @Test
-    public void addCard_ResponseCreated() {
-        mockMvc.perform(post("/cards/create").contentType("application/json").content(NEW_CARD))
+    public void getPurchaseByCard_ResponseOk() {
+        mockMvc.perform(get(ROOT_URL.concat("/card/{id}"), "1"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(content().contentType(CONTENT_JSON));
+    }
+
+    @SneakyThrows
+    @Test
+    public void addPurchase_ResponseCreated() {
+        mockMvc.perform(post(ROOT_URL.concat("/create")).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
     }
 
-    @SneakyThrows
-    @Test
-    public void updateCard_ResponseAccepted() {
-        mockMvc.perform(put("/cards/update").contentType("application/json").content(UPDATING_CARD))
-                .andExpect(status().isAccepted());
-    }
 
     @SneakyThrows
     @Test
-    public void deleteCard_ResponseAccepted() {
-        mockMvc.perform(delete("/cards/delete/{id}", "1"))
+    public void deletePurchase_ResponseAccepted() {
+        mockMvc.perform(delete(ROOT_URL.concat("/delete/{id}"), "1"))
                 .andExpect(status().isAccepted());
     }
 }
