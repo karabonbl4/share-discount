@@ -24,10 +24,10 @@ public class DiscountCard {
     private Long number;
     @Column
     private BigDecimal discount;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_user_id")
     private User owner;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "discount_policy_id")
     private DiscountPolicy discountPolicy;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "card")

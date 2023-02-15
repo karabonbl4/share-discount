@@ -27,7 +27,7 @@ public class DiscountPolicy {
     private BigDecimal maxDiscount;
     @Column(name = "discount_step")
     private BigDecimal discountStep;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "trademark_id")
     private Trademark trademark;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "discountPolicy")

@@ -21,9 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,33 +35,63 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
 @Sql("classpath:sql/insert_data.sql")
-public class CouponControllerTest {
+class DiscountCardControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
-    private final static String NEW_COUPON = "{\n" +
-            "        \"name\": \"testCoupon\",\n" +
-            "        \"startDate\": \"2012-12-17\",\n" +
-            "        \"endDate\": \"2021-08-22\",\n" +
-            "        \"discount\": 0.25,\n" +
-            "        \"used\": true,\n" +
-            "        \"trademark\": {\n" +
+    private final static String NEW_CARD = "{\n" +
+            "        \"name\": \"silver_card\",\n" +
+            "        \"number\": 321321,\n" +
+            "        \"discount\": 0.20,\n" +
+            "        \"ownerId\": {\n" +
             "            \"id\": 1,\n" +
-            "            \"title\": \"OZ\"\n" +
+            "            \"firstName\": \"Ivan\",\n" +
+            "            \"surName\": \"Ivanov\",\n" +
+            "            \"phoneNumber\": \"+32311212\",\n" +
+            "            \"email\": \"ivan@ivanov.by\",\n" +
+            "            \"birthday\": null,\n" +
+            "            \"score\": 0.00,\n" +
+            "            \"isActive\": false\n" +
+            "        },\n" +
+            "        \"discountPolicyId\": {\n" +
+            "            \"id\": 1,\n" +
+            "            \"title\": \"OZpolicy\",\n" +
+            "            \"minDiscount\": 0.05,\n" +
+            "            \"maxDiscount\": 0.50,\n" +
+            "            \"discountStep\": 0.05,\n" +
+            "            \"trademarkId\": {\n" +
+            "                \"id\": 1,\n" +
+            "                \"title\": \"OZ\"\n" +
+            "            }\n" +
             "        }\n" +
             "    }";
-    private final static String UPDATING_COUPON = "{\n" +
-            "        \"id\": 1,\n" +
-            "        \"name\": \"testCoupon123\",\n" +
-            "        \"startDate\": \"2012-12-17\",\n" +
-            "        \"endDate\": \"2022-01-15\",\n" +
-            "        \"discount\": 0.25,\n" +
-            "        \"used\": false,\n" +
-            "        \"trademark\": {\n" +
+    private final static String UPDATING_CARD = "{\n" +
+            "        \"id\": 2,\n" +
+            "        \"name\": \"bronze_card\",\n" +
+            "        \"number\": 258258,\n" +
+            "        \"discount\": 0.10,\n" +
+            "        \"ownerId\": {\n" +
             "            \"id\": 1,\n" +
-            "            \"title\": \"OZ\"\n" +
+            "            \"firstName\": \"Ivan\",\n" +
+            "            \"surName\": \"Ivanov\",\n" +
+            "            \"phoneNumber\": \"+32311212\",\n" +
+            "            \"email\": \"ivan@ivanov.by\",\n" +
+            "            \"birthday\": null,\n" +
+            "            \"score\": 0.00,\n" +
+            "            \"isActive\": false\n" +
+            "        },\n" +
+            "        \"discountPolicyId\": {\n" +
+            "            \"id\": 1,\n" +
+            "            \"title\": \"OZpolicy\",\n" +
+            "            \"minDiscount\": 0.05,\n" +
+            "            \"maxDiscount\": 0.50,\n" +
+            "            \"discountStep\": 0.05,\n" +
+            "            \"trademarkId\": {\n" +
+            "                \"id\": 1,\n" +
+            "                \"title\": \"OZ\"\n" +
+            "            }\n" +
             "        }\n" +
-            "    }";
+            "    }";;
 
     @BeforeEach
     public void setup() {
@@ -77,24 +105,22 @@ public class CouponControllerTest {
 
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
-        assertNotNull(webApplicationContext.getBean("couponController"));
+        assertNotNull(webApplicationContext.getBean("discountCardController"));
     }
 
     @SneakyThrows
     @Test
-    public void getAllCoupons_ResponseOk() {
-        MvcResult mvcResult = mockMvc.perform(get("/coupons"))
+    public void getAllCards_ResponseOk() {
+        mockMvc.perform(get("/cards"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andReturn();
-        assertEquals("application/json",
-                mvcResult.getResponse().getContentType());
+                .andExpect(content().contentType("application/json"));
     }
 
     @SneakyThrows
     @Test
-    public void getCouponById_ResponseOk() {
-        mockMvc.perform(get("/coupons/{id}", "1"))
+    public void getCardById_ResponseOk() {
+        mockMvc.perform(get("/cards/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
@@ -102,31 +128,30 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
-    public void getCouponByPurchase_ResponseOk() {
-        mockMvc.perform(get("/coupons/purchase/{id}", "1"))
+    public void getCardByUser_ResponseOk() {
+        mockMvc.perform(get("/cards/user/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(content().contentType("application/json"));
     }
 
     @SneakyThrows
     @Test
-    public void addCoupon_ResponseCreated() {
-        mockMvc.perform(post("/coupons/create").contentType("application/json").content(NEW_COUPON))
+    public void addCard_ResponseCreated() {
+        mockMvc.perform(post("/cards/create").contentType("application/json").content(NEW_CARD))
                 .andExpect(status().isCreated());
     }
 
     @SneakyThrows
     @Test
-    public void updateCoupon_ResponseAccepted() {
-        mockMvc.perform(put("/coupons/update").contentType("application/json").content(UPDATING_COUPON))
+    public void updateCard_ResponseAccepted() {
+        mockMvc.perform(put("/cards/update").contentType("application/json").content(UPDATING_CARD))
                 .andExpect(status().isAccepted());
     }
 
     @SneakyThrows
     @Test
-    public void deleteCoupon_ResponseAccepted() {
-        mockMvc.perform(delete("/coupons/delete/{id}", "1"))
+    public void deleteCard_ResponseAccepted() {
+        mockMvc.perform(delete("/cards/delete/{id}", "1"))
                 .andExpect(status().isAccepted());
     }
 }

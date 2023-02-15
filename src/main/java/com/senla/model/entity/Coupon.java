@@ -28,7 +28,7 @@ public class Coupon {
     private BigDecimal discount;
     @Column
     private Boolean used;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "trademark_id")
     private Trademark trademark;
     @OneToMany(mappedBy = "coupon")
