@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.DiscountPolicyRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.DiscountPolicy;
 import com.senla.service.DiscountPolicyService;
 import com.senla.model.dto.DiscountPolicyDto;
@@ -28,8 +28,8 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     }
 
     @Override
-    public DiscountPolicyDto findById(Long id) throws NotFoundException{
-        DiscountPolicy discountPolicy = discountPolicyRepository.findById(id).orElseThrow(NotFoundException::new);
+    public DiscountPolicyDto findById(Long id) throws EntityNotFoundException {
+        DiscountPolicy discountPolicy = discountPolicyRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(discountPolicy, DiscountPolicyDto.class);
     }
 

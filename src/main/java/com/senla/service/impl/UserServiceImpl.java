@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.UserRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.User;
 import com.senla.service.UserService;
 import com.senla.model.dto.UserDto;
@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findById(Long id) throws NotFoundException{
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+    public UserDto findById(Long id) throws EntityNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(user, UserDto.class);
     }
 

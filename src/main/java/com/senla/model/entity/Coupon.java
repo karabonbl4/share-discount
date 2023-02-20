@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedEntityGraph(name = "fetch.purchase",
+        attributeNodes = @NamedAttributeNode("purchases"))
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

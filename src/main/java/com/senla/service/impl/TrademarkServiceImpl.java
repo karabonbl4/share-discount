@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.TrademarkRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.Trademark;
 import com.senla.service.TrademarkService;
 import com.senla.model.dto.TrademarkDto;
@@ -29,8 +29,8 @@ public class TrademarkServiceImpl implements TrademarkService {
     }
 
     @Override
-    public TrademarkDto findById(Long id) throws NotFoundException{
-        Trademark trademark = trademarkRepository.findById(id).orElseThrow(NotFoundException::new);
+    public TrademarkDto findById(Long id) throws EntityNotFoundException {
+        Trademark trademark = trademarkRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(trademark, TrademarkDto.class);
     }
 

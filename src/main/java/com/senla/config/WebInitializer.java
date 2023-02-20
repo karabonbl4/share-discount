@@ -13,7 +13,7 @@ public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(MapperConfig.class, LiquibaseConfig.class, PersistenceJPAConfig.class);
+        rootContext.register(MapperConfig.class, LiquibaseConfig.class, PersistenceJPAConfig.class, WebSecurityConfig.class);
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext();

@@ -18,4 +18,5 @@ public class ErrorResponse {
     @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private HttpStatus status;
+
 }

@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.DiscountCardRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.DiscountCard;
 import com.senla.service.DiscountCardService;
 import com.senla.model.dto.DiscountCardDto;
@@ -28,8 +28,8 @@ public class DiscountCardServiceImpl implements DiscountCardService {
     }
 
     @Override
-    public DiscountCardDto findById(Long id) throws NotFoundException{
-        DiscountCard discountCard = discountCardRepository.findById(id).orElseThrow(NotFoundException::new);
+    public DiscountCardDto findById(Long id) throws EntityNotFoundException {
+        DiscountCard discountCard = discountCardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(discountCard, DiscountCardDto.class);
     }
 

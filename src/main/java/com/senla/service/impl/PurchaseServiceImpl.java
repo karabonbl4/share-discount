@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.dao.PurchaseRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.Purchase;
 import com.senla.service.PurchaseService;
 import com.senla.model.dto.PurchaseDto;
@@ -29,8 +29,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public PurchaseDto findById(Long id) throws NotFoundException{
-        Purchase purchase = purchaseRepository.findById(id).orElseThrow(NotFoundException::new);
+    public PurchaseDto findById(Long id) throws EntityNotFoundException {
+        Purchase purchase = purchaseRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(purchase, PurchaseDto.class);
     }
 
