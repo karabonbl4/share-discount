@@ -1,6 +1,7 @@
 package com.senla.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,8 @@ public class CouponDto {
     private BigDecimal discount;
     private Boolean used;
     private TrademarkDto trademarkId;
+    @JsonIgnore
     private List<PurchaseDto> purchases;
+    @JsonIgnore
     private List<UserDto> users;
 }

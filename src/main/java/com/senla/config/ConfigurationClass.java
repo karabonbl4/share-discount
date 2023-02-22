@@ -39,12 +39,4 @@ public class ConfigurationClass {
         objectMapper.setDateFormat(df);
         return objectMapper;
     }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public ConnectionHolder connectionHolder() {
-        return new ConnectionHolder();
-    }
-
-
 }

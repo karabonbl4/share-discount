@@ -4,8 +4,8 @@ import com.senla.service.dto.TrademarkDto;
 
 
 public interface TrademarkService {
-    TrademarkDto save(TrademarkDto trademarkDto);
+    void save(TrademarkDto trademarkDto);
     TrademarkDto findById(Long id);
     boolean delete(TrademarkDto trademarkDto);
-    TrademarkDto update(TrademarkDto trademarkDto);
+    void update(TrademarkDto trademarkDto);
 }

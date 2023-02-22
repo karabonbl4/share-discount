@@ -1,9 +1,11 @@
 package com.senla.service.impl;
 
 import com.senla.model.Coupon;
-import com.senla.repository.impl.CouponRepository;
+import com.senla.model.Purchase;
+import com.senla.repository.CouponRepository;
 import com.senla.service.CouponService;
 import com.senla.service.dto.CouponDto;
+import com.senla.service.dto.PurchaseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -15,28 +17,33 @@ public class CouponServiceImpl implements CouponService {
     private final ModelMapper modelMapper;
     private final CouponRepository couponRepository;
     @Override
-    public CouponDto save(CouponDto couponDto) {
+    public void save(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
-        Coupon coupon1 = couponRepository.saveOrUpdate(coupon);
-        return modelMapper.map(coupon1, CouponDto.class);
+        couponRepository.save(coupon);
     }
 
     @Override
     public CouponDto findById(Long id) {
         Coupon coupon = couponRepository.findById(id);
-        return modelMapper.map(coupon, CouponDto.class);
+        CouponDto returnCoupon = modelMapper.map(coupon, CouponDto.class);
+        return returnCoupon;
     }
     @Override
-    public boolean delete(CouponDto couponDto) {
+    public void delete(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
         couponRepository.delete(coupon);
-        return couponRepository.findById(couponDto.getId()) == null;
     }
 
     @Override
-    public CouponDto update(CouponDto couponDto) {
+    public CouponDto findByPurchase(PurchaseDto purchaseDto) {
+        Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
+        Coupon couponByPurchase = couponRepository.getCouponByPurchase(purchase);
+        return modelMapper.map(couponByPurchase, CouponDto.class);
+    }
+
+    @Override
+    public void update(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
-        Coupon coupon1 = couponRepository.saveOrUpdate(coupon);
-        return modelMapper.map(coupon1, CouponDto.class);
+        couponRepository.update(coupon);
     }
 }

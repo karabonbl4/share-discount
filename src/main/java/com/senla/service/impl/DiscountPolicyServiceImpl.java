@@ -1,7 +1,7 @@
 package com.senla.service.impl;
 
 import com.senla.model.DiscountPolicy;
-import com.senla.repository.impl.DiscountPolicyRepository;
+import com.senla.repository.DiscountPolicyRepository;
 import com.senla.service.DiscountPolicyService;
 import com.senla.service.dto.DiscountPolicyDto;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,10 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     private final DiscountPolicyRepository discountPolicyRepository;
 
     @Override
-    public DiscountPolicyDto save(DiscountPolicyDto discountPolicyDto) {
+    public void save(DiscountPolicyDto discountPolicyDto) {
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        DiscountPolicy discountPolicy1 = discountPolicyRepository.saveOrUpdate(discountPolicy);
-        return modelMapper.map(discountPolicy1, DiscountPolicyDto.class);
+        discountPolicyRepository.save(discountPolicy);
+
     }
 
     @Override
@@ -45,8 +45,8 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     }
 
     @Override
-    public DiscountPolicyDto update(DiscountPolicyDto discountPolicyDto) {
+    public void update(DiscountPolicyDto discountPolicyDto) {
         DiscountPolicy discountPolicy = modelMapper.map(discountPolicyDto, DiscountPolicy.class);
-        return modelMapper.map(discountPolicyRepository.saveOrUpdate(discountPolicy), DiscountPolicyDto.class);
+        discountPolicyRepository.update(discountPolicy);
     }
 }

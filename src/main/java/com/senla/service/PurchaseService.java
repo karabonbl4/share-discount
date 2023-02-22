@@ -5,9 +5,11 @@ import com.senla.service.dto.PurchaseDto;
 import java.util.List;
 
 public interface PurchaseService {
-    PurchaseDto save(PurchaseDto purchaseDto);
+    void save(PurchaseDto purchaseDto);
     PurchaseDto findById(Long id);
     List<PurchaseDto> findAll();
-    boolean delete(PurchaseDto purchaseDto);
-    PurchaseDto update(PurchaseDto purchaseDto);
+    void delete(PurchaseDto purchaseDto);
+    void update(PurchaseDto purchaseDto);
+
+
 }

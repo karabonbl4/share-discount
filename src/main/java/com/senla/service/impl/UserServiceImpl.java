@@ -1,15 +1,16 @@
 package com.senla.service.impl;
 
-import com.senla.annotation.Transaction;
+import com.senla.repository.UserRepository;
 import com.senla.model.User;
-import com.senla.repository.impl.UserRepository;
 import com.senla.service.UserService;
 import com.senla.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,44 +18,32 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
-    @Transaction
     @Override
-    public UserDto save(UserDto userDto) {
+    public void save(UserDto userDto) {
         User map = modelMapper.map(userDto, User.class);
-        User user = userRepository.saveOrUpdate(map);
-        return modelMapper.map(user, UserDto.class);
-
+        userRepository.save(map);
     }
 
-    @Transaction
     @Override
     public UserDto findById(Long id) {
         User byId = userRepository.findById(id);
         return modelMapper.map(byId, UserDto.class);
     }
 
-    @Transaction
     @Override
     public List<UserDto> findAll() {
-        return null;
+        return userRepository.findAll().stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
     }
 
-    @Transaction
     @Override
-    public boolean delete(UserDto userDto) {
+    public void delete(UserDto userDto) {
         User map = modelMapper.map(userDto, User.class);
         userRepository.delete(map);
-        if (userRepository.findById(userDto.getId()) == null) {
-            return true;
-        }
-        return false;
     }
 
-    @Transaction
     @Override
-    public UserDto update(UserDto userDto) {
+    public void update(UserDto userDto) {
         User map = modelMapper.map(userDto, User.class);
-        User user = userRepository.saveOrUpdate(map);
-        return modelMapper.map(user, UserDto.class);
+        userRepository.update(map);
     }
 }

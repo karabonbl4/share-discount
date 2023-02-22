@@ -21,16 +21,14 @@ public class TrademarkController {
         return objectMapper.writeValueAsString(trademarkDto);
     }
     @SneakyThrows
-    public String save(String newTrademark){
+    public void save(String newTrademark){
         TrademarkDto newDto = objectMapper.readValue(newTrademark, TrademarkDto.class);
-        TrademarkDto saveTrademark = trademarkService.save(newDto);
-        return objectMapper.writeValueAsString(saveTrademark);
+        trademarkService.save(newDto);
     }
     @SneakyThrows
-    public String update(String newTrademark){
+    public void update(String newTrademark){
         TrademarkDto newDto = objectMapper.readValue(newTrademark, TrademarkDto.class);
-        TrademarkDto saveTrademark = trademarkService.update(newDto);
-        return objectMapper.writeValueAsString(saveTrademark);
+        trademarkService.update(newDto);
     }
 
 }

@@ -21,5 +21,6 @@ public class DiscountCardDto {
     @JsonIgnore
     private UserDto ownerId;
     private DiscountPolicyDto discountPolicyId;
+    @JsonIgnore
     private List<PurchaseDto> purchases;
 }
