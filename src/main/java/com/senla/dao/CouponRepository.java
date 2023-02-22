@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     @EntityGraph(value = "fetch.purchase", type = EntityGraph.EntityGraphType.LOAD)
-    Coupon getCouponByPurchases_Id(Long id);
+    Coupon getCouponByPurchase_Id(Long id);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -29,4 +30,6 @@ public class UserDto {
     private List<RoleDto> roles;
     @JsonIgnore
     private List<CouponDto> coupons;
+    private String username;
+    private String password;
 }

@@ -3,13 +3,16 @@ package com.senla.controller;
 import com.senla.config.TestJPAConfig;
 import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.WebConfig;
+import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -24,6 +27,7 @@ import javax.servlet.ServletContext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,8 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
-@Sql("classpath:sql/insert_data.sql")
+@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class, WebSecurityConfig.class})
 public class CouponControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -66,9 +69,16 @@ public class CouponControllerTest {
             "    }";
 
     @BeforeEach
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity()).build();
+    }
+
+    @AfterEach
+    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
+    public void destroyDB() {
     }
 
     @Test
@@ -82,6 +92,8 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllCoupons_ResponseOk() {
         MvcResult mvcResult = mockMvc.perform(get("/coupons"))
                 .andDo(print())
@@ -93,6 +105,7 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getCouponById_ResponseOk() {
         mockMvc.perform(get("/coupons/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -102,6 +115,8 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getCouponByPurchase_ResponseOk() {
         mockMvc.perform(get("/coupons/purchase/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -111,6 +126,7 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void addCoupon_ResponseCreated() {
         mockMvc.perform(post("/coupons/create").contentType("application/json").content(NEW_COUPON))
                 .andExpect(status().isCreated());
@@ -118,6 +134,7 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void updateCoupon_ResponseAccepted() {
         mockMvc.perform(put("/coupons/update").contentType("application/json").content(UPDATING_COUPON))
                 .andExpect(status().isAccepted());
@@ -125,6 +142,7 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void deleteCoupon_ResponseAccepted() {
         mockMvc.perform(delete("/coupons/delete/{id}", "1"))
                 .andExpect(status().isAccepted());

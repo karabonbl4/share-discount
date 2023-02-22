@@ -29,7 +29,7 @@ public class Purchase {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private DiscountCard card;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 

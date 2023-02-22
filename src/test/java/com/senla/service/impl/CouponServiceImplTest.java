@@ -88,14 +88,14 @@ public class CouponServiceImplTest {
     public void shouldFindByPurchaseIdSuccessfully() {
         final CouponDto couponDto = mock(CouponDto.class);
         final Coupon mapedCoupon = mock(Coupon.class);
-        when(couponRepository.getCouponByPurchases_Id(ID)).thenReturn(mapedCoupon);
+        when(couponRepository.getCouponByPurchase_Id(ID)).thenReturn(mapedCoupon);
         when(modelMapper.map(mapedCoupon, CouponDto.class)).thenReturn(couponDto);
 
         final CouponDto actual = couponService.findByPurchaseId(ID);
 
         assertNotNull(actual);
         assertEquals(couponDto, actual);
-        verify(couponRepository).getCouponByPurchases_Id(ID);
+        verify(couponRepository).getCouponByPurchase_Id(ID);
     }
 
     @Test

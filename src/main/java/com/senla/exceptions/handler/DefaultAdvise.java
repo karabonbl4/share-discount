@@ -30,30 +30,40 @@ public class DefaultAdvise {
     @ExceptionHandler(HttpMessageNotWritableException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleResponseStatusException(@NotNull ResponseStatusException e) {
-        return new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNoSuchPointcutException(@NotNull NoHandlerFoundException e) {
-        return new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.NOT_FOUND);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleUsernameNotFoundException(@NotNull UsernameNotFoundException e) {
-        return new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.UNAUTHORIZED);
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.UNAUTHORIZED);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbiddenException(AccessDeniedException e) {
-        return new ErrorResponse("Access denied!", LocalDateTime.now(), HttpStatus.FORBIDDEN);
+        ErrorResponse errorResponse = new ErrorResponse("Access denied!", LocalDateTime.now(), HttpStatus.FORBIDDEN);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(@NotNull MethodArgumentTypeMismatchException e){
-        return new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
     }
 }

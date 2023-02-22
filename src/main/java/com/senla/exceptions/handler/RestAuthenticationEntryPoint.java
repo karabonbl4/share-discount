@@ -2,6 +2,7 @@ package com.senla.exceptions.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,6 +17,7 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final ObjectMapper objectMapper;
@@ -35,6 +37,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         OutputStream out = httpServletResponse.getOutputStream();
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(out, errorResponse);
+        log.error(String.valueOf(errorResponse));
         out.flush();
     }
 

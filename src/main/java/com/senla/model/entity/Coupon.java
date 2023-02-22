@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Builder
 @NamedEntityGraph(name = "fetch.purchase",
-        attributeNodes = @NamedAttributeNode("purchases"))
+        attributeNodes = @NamedAttributeNode("purchase"))
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class Coupon {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "trademark_id")
     private Trademark trademark;
-    @OneToMany(mappedBy = "coupon")
-    private Set<Purchase> purchases;
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "coupon")
+    private Purchase purchase;
     @ManyToMany
     @JoinTable(name = "user_coupon", joinColumns = @JoinColumn(name = "coupon_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;

@@ -21,21 +21,23 @@ public class CouponController {
     private final CouponService couponService;
 
     @GetMapping
-    @Secured(value = "ROLE_USER")
+    @Secured(value = "ROLE_ADMIN")
     public List<CouponDto> getAllCoupons() {
         return couponService.findAll();
     }
 
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(value = "/{id}")
     public CouponDto getCouponById(@PathVariable(name = "id") Long couponId) {
         return couponService.findById(couponId);
     }
 
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(value = "/purchase/{id}")
     public CouponDto getCouponByPurchase(@PathVariable(name = "id") Long purchaseId) {
         return couponService.findByPurchaseId(purchaseId);
     }
-
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @PostMapping(value = "/create")
     public ResponseEntity<?> addCoupon(@RequestBody CouponDto newCoupon) {
         couponService.save(newCoupon);
@@ -46,6 +48,7 @@ public class CouponController {
         return new ResponseEntity<>(newCoupon, headers, HttpStatus.CREATED);
     }
 
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @PutMapping(value = "/update")
     public ResponseEntity<?> updateCoupon(@RequestBody CouponDto updateCoupon) {
         couponService.update(updateCoupon);
@@ -56,6 +59,7 @@ public class CouponController {
         return new ResponseEntity<>(updateCoupon, headers, HttpStatus.ACCEPTED);
     }
 
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteCoupon(@PathVariable(name = "id") Long couponId) {
         couponService.delete(couponId);

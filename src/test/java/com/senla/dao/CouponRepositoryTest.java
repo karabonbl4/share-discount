@@ -4,6 +4,8 @@ import com.senla.config.TestJPAConfig;
 import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.model.entity.Coupon;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,9 +29,9 @@ public class CouponRepositoryTest {
 
     @Test
     @Transactional
-    public void getCouponByPurchases_Id() {
-        Coupon couponByPurchases_id = repository.getCouponByPurchases_Id(1L);
-        String actualName = couponByPurchases_id.getName();
+    public void getCouponByPurchase_Id() {
+        Coupon couponByPurchase_id = repository.getCouponByPurchase_Id(1L);
+        String actualName = couponByPurchase_id.getName();
 
         String expectName = "coupon1";
 
