@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class UserDto {
     private String surName;
     private String phoneNumber;
     private String email;
-    private Date birthday;
+    private LocalDate birthday;
     private BigDecimal score;
     private Boolean isActive;
     @JsonIgnore
@@ -29,4 +30,5 @@ public class UserDto {
     private List<RoleDto> roles;
     @JsonIgnore
     private List<CouponDto> coupons;
+    private List<DiscountCardDto> cards;
 }
