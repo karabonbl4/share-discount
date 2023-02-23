@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,7 +38,7 @@ public class User{
     private Set<Purchase> purchases;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private Set<Coupon> coupons;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")

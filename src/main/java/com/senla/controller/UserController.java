@@ -30,7 +30,7 @@ public class UserController {
         return userService.findById(userId);
     }
 
-    @PostMapping
+    @PostMapping(value = "/registration")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto newUser) {
         userService.save(newUser);
         HttpHeaders headers = new HttpHeaders();

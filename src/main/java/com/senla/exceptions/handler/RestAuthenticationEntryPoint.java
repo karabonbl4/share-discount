@@ -29,7 +29,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (e.getClass().isAssignableFrom(BadCredentialsException.class)) {
             errorResponse.setMessage("Password incorrect!");
         } else {
-            errorResponse.setMessage("Unauthorized access");
+            errorResponse.setMessage(e.getMessage());
         }
 
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);

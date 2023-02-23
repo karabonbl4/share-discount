@@ -1,7 +1,7 @@
 package com.senla.dao;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
         classes = {TestJPAConfig.class,
-                TestLiquibaseConfiguration.class
+                LiquibaseConfig.class
         },
         loader = AnnotationConfigContextLoader.class)
 public class DiscountPolicyRepositoryTest {

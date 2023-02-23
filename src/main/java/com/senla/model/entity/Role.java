@@ -20,5 +20,9 @@ public class Role {
     @Column
     private String name;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
-    private Set<User> users;
+    private List<User> users;
+
+    public Role(String name){
+        this.name = name;
+    }
 }
