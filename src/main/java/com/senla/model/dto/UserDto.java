@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class UserDto {
     private String surName;
     private String phoneNumber;
     private String email;
-    private Date birthday;
+    private LocalDate birthday;
     private BigDecimal score;
     private Boolean isActive;
     @JsonIgnore
@@ -32,4 +33,5 @@ public class UserDto {
     private List<CouponDto> coupons;
     private String username;
     private String password;
+    private List<DiscountCardDto> cards;
 }

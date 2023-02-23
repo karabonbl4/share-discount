@@ -37,9 +37,9 @@ public class CouponController {
     public CouponDto getCouponByPurchase(@PathVariable(name = "id") Long purchaseId) {
         return couponService.findByPurchaseId(purchaseId);
     }
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> addCoupon(@RequestBody CouponDto newCoupon) {
+
+    @PostMapping
+    public ResponseEntity<CouponDto> addCoupon(@RequestBody CouponDto newCoupon) {
         couponService.save(newCoupon);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -48,9 +48,9 @@ public class CouponController {
         return new ResponseEntity<>(newCoupon, headers, HttpStatus.CREATED);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @PutMapping(value = "/update")
-    public ResponseEntity<?> updateCoupon(@RequestBody CouponDto updateCoupon) {
+
+    @PutMapping
+    public ResponseEntity<CouponDto> updateCoupon(@RequestBody CouponDto updateCoupon) {
         couponService.update(updateCoupon);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -59,9 +59,8 @@ public class CouponController {
         return new ResponseEntity<>(updateCoupon, headers, HttpStatus.ACCEPTED);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteCoupon(@PathVariable(name = "id") Long couponId) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteCoupon(@PathVariable(name = "id") Long couponId) {
         couponService.delete(couponId);
         return new ResponseEntity<>("Coupon deleted successfully.", HttpStatus.ACCEPTED);
     }

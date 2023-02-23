@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
+
     private final ModelMapper modelMapper;
+
     private final UserRepository userRepository;
 
     @Override

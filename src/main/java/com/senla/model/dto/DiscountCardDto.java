@@ -14,13 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscountCardDto {
-    public DiscountCardDto(Long id){
-        this.id = id;
-    }
+
     private Long id;
     private String name;
     private Long number;
     private BigDecimal discount;
+    @JsonIgnore
     private UserDto ownerId;
     private DiscountPolicyDto discountPolicyId;
     @JsonIgnore

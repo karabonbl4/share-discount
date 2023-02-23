@@ -36,9 +36,8 @@ public class DiscountPolicyController {
         return policyService.findByTrademarkId(trademarkId);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createPolicy(@RequestBody DiscountPolicyDto newPolicy) {
+    @PostMapping
+    public ResponseEntity<DiscountPolicyDto> createPolicy(@RequestBody DiscountPolicyDto newPolicy) {
         policyService.save(newPolicy);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -47,9 +46,8 @@ public class DiscountPolicyController {
         return new ResponseEntity<>(newPolicy, headers, HttpStatus.CREATED);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @PutMapping(value = "/update")
-    public ResponseEntity<?> updatePolicy(@RequestBody DiscountPolicyDto discountPolicyDto) {
+    @PutMapping
+    public ResponseEntity<DiscountPolicyDto> updatePolicy(@RequestBody DiscountPolicyDto discountPolicyDto) {
         policyService.update(discountPolicyDto);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -58,9 +56,8 @@ public class DiscountPolicyController {
         return new ResponseEntity<>(discountPolicyDto, headers, HttpStatus.ACCEPTED);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<?> deletePolicy(@PathVariable(name = "id") Long policyId) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deletePolicy(@PathVariable(name = "id") Long policyId) {
         policyService.delete(policyId);
         return new ResponseEntity<>("Policy deleted successfully.", HttpStatus.ACCEPTED);
     }

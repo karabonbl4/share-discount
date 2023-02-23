@@ -43,9 +43,8 @@ public class PurchaseController {
         return purchaseService.findByCardId(cardId);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createPurchase(@RequestBody PurchaseDto newPurchase) {
+    @PostMapping
+    public ResponseEntity<PurchaseDto> createPurchase(@RequestBody PurchaseDto newPurchase) {
         purchaseService.save(newPurchase);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -54,9 +53,8 @@ public class PurchaseController {
         return new ResponseEntity<>(newPurchase, headers, HttpStatus.CREATED);
     }
 
-    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<?> deletePurchase(@PathVariable(name = "id") Long purchaseId) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deletePurchase(@PathVariable(name = "id") Long purchaseId) {
         purchaseService.delete(purchaseId);
         return new ResponseEntity<>("Purchase deleted successfully.", HttpStatus.ACCEPTED);
     }

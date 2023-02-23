@@ -41,9 +41,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class, WebSecurityConfig.class})
 public class CouponControllerTest {
+
     @Autowired
     private WebApplicationContext webApplicationContext;
+
     private MockMvc mockMvc;
+
     private final static String NEW_COUPON = "{\n" +
             "        \"name\": \"testCoupon\",\n" +
             "        \"startDate\": \"2012-12-17\",\n" +
@@ -128,7 +131,7 @@ public class CouponControllerTest {
     @Test
     @WithMockUser
     public void addCoupon_ResponseCreated() {
-        mockMvc.perform(post("/coupons/create").contentType("application/json").content(NEW_COUPON))
+        mockMvc.perform(post("/coupons").contentType("application/json").content(NEW_COUPON))
                 .andExpect(status().isCreated());
     }
 
@@ -136,7 +139,7 @@ public class CouponControllerTest {
     @Test
     @WithMockUser
     public void updateCoupon_ResponseAccepted() {
-        mockMvc.perform(put("/coupons/update").contentType("application/json").content(UPDATING_COUPON))
+        mockMvc.perform(put("/coupons").contentType("application/json").content(UPDATING_COUPON))
                 .andExpect(status().isAccepted());
     }
 
@@ -144,7 +147,7 @@ public class CouponControllerTest {
     @Test
     @WithMockUser
     public void deleteCoupon_ResponseAccepted() {
-        mockMvc.perform(delete("/coupons/delete/{id}", "1"))
+        mockMvc.perform(delete("/coupons/{id}", "1"))
                 .andExpect(status().isAccepted());
     }
 }

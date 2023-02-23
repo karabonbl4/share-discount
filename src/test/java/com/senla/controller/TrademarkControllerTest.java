@@ -41,12 +41,17 @@ class TrademarkControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
     private MockMvc mockMvc;
+
     private final static String ROOT_URL = "/trademarks";
+
     private final static String CONTENT_JSON = "application/json";
+
     private final static String NEW_DATA = "{\n" +
             "        \"title\": \"testTitle\"\n" +
             "    }";
+
     private final static String UPDATING_DATA = "{\n" +
             "        \"id\": 1,\n" +
             "        \"title\": \"test\"\n" +
@@ -99,7 +104,7 @@ class TrademarkControllerTest {
     @Test
     @WithMockUser
     public void addTrademark_ResponseCreated() {
-        mockMvc.perform(post(ROOT_URL.concat("/create")).contentType(CONTENT_JSON).content(NEW_DATA))
+        mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
     }
 
@@ -107,7 +112,7 @@ class TrademarkControllerTest {
     @Test
     @WithMockUser
     public void updateTrademark_ResponseAccepted() {
-        mockMvc.perform(put(ROOT_URL.concat("/update")).contentType(CONTENT_JSON).content(UPDATING_DATA))
+        mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.title").value("test"));
     }
@@ -116,7 +121,7 @@ class TrademarkControllerTest {
     @Test
     @WithMockUser
     public void deleteTrademark_ResponseAccepted() {
-        mockMvc.perform(delete(ROOT_URL.concat("/delete/{id}"), "1"))
+        mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());
     }
 }

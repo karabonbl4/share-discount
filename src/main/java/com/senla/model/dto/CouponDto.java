@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Getter
@@ -21,9 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouponDto {
-    public CouponDto(Long id){
-        this.id = id;
-    }
     private Long id;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd")

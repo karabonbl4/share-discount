@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class DiscountCardServiceImpl implements DiscountCardService {
+
     private final ModelMapper modelMapper;
+
     private final DiscountCardRepository discountCardRepository;
 
     @Override
@@ -28,6 +30,7 @@ public class DiscountCardServiceImpl implements DiscountCardService {
     }
 
     @Override
+
     public DiscountCardDto findById(Long id) throws EntityNotFoundException {
         DiscountCard discountCard = discountCardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(discountCard, DiscountCardDto.class);

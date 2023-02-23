@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class TrademarkServiceImpl implements TrademarkService {
+
     private final ModelMapper modelMapper;
+
     private final TrademarkRepository trademarkRepository;
 
     @Override

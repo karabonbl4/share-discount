@@ -1,20 +1,29 @@
 package com.senla.config;
 
 import liquibase.integration.spring.SpringLiquibase;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class LiquibaseConfig {
-    @Autowired
-    private PersistenceJPAConfig connectionHolder;
+
+    @Value("${liquibase.changelog}")
+    private String changelog;
+    @Bean
+    public SpringLiquibase liquibase(DataSource dataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDataSource(dataSource);
+        liquibase.setChangeLog(changelog);
+        return liquibase;
+    }
 
     @Bean
-    public SpringLiquibase liquibase(){
-        SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(connectionHolder.entityManagerFactory().getDataSource());
-        liquibase.setChangeLog(connectionHolder.getEnvironment().getProperty("liquibase.changelog"));
-        return liquibase;
+    public static @NotNull PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }

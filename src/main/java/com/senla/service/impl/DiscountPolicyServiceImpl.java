@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class DiscountPolicyServiceImpl implements DiscountPolicyService {
+
     private final ModelMapper modelMapper;
+
     private final DiscountPolicyRepository discountPolicyRepository;
 
     @Override
