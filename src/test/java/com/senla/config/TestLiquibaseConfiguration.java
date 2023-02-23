@@ -4,6 +4,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 public class TestLiquibaseConfiguration {
@@ -17,4 +18,5 @@ public class TestLiquibaseConfiguration {
         liquibase.setChangeLog(connectionHolder.getEnvironment().getProperty("liquibase.changelog"));
         return liquibase;
     }
+
 }

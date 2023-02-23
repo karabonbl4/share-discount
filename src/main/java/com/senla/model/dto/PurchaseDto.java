@@ -25,9 +25,9 @@ public class PurchaseDto {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime transactionDate;
     private BigDecimal sum;
-//    @JsonIgnore
+    //    @JsonIgnore
     private UserDto user;
-//    @JsonIgnore
+    //    @JsonIgnore
     private DiscountCardDto card;
     @JsonIgnore
     private CouponDto coupon;

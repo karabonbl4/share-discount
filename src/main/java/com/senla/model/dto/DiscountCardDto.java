@@ -14,9 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscountCardDto {
-    public DiscountCardDto(Long id){
-        this.id = id;
-    }
+
     private Long id;
     private String name;
     private Long number;

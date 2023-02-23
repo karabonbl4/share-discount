@@ -27,8 +27,8 @@ public class UserController {
         return userService.findById(userId);
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createUser(@RequestBody UserDto newUser) {
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto newUser) {
         userService.save(newUser);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -37,8 +37,8 @@ public class UserController {
         return new ResponseEntity<>(newUser, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDto userUpd) {
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userUpd) {
         userService.update(userUpd);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -46,8 +46,9 @@ public class UserController {
                 .toUri());
         return new ResponseEntity<>(userUpd, headers, HttpStatus.ACCEPTED);
     }
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long userId){
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name = "id") Long userId) {
         userService.delete(userId);
         return new ResponseEntity<>("User deleted successfully.", HttpStatus.ACCEPTED);
     }

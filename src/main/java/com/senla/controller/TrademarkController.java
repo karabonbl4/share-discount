@@ -27,8 +27,8 @@ public class TrademarkController {
         return trademarkService.findById(trademarkId);
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createTrademark(@RequestBody TrademarkDto newTrademark) {
+    @PostMapping
+    public ResponseEntity<TrademarkDto> createTrademark(@RequestBody TrademarkDto newTrademark) {
         trademarkService.save(newTrademark);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -37,8 +37,8 @@ public class TrademarkController {
         return new ResponseEntity<>(newTrademark, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update")
-    public ResponseEntity<?> updateTrademark(@RequestBody TrademarkDto trademarkUpd) {
+    @PutMapping
+    public ResponseEntity<TrademarkDto> updateTrademark(@RequestBody TrademarkDto trademarkUpd) {
         trademarkService.update(trademarkUpd);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -47,8 +47,8 @@ public class TrademarkController {
         return new ResponseEntity<>(trademarkUpd, headers, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteTrademark(@PathVariable(name = "id") Long trademarkId) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteTrademark(@PathVariable(name = "id") Long trademarkId) {
         trademarkService.delete(trademarkId);
         return new ResponseEntity<>("Trademark deleted successfully.", HttpStatus.ACCEPTED);
     }

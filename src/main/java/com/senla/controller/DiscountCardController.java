@@ -34,8 +34,8 @@ public class DiscountCardController {
         return cardService.getCardsByUserId(userId);
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createNewCard(@RequestBody DiscountCardDto newCard) {
+    @PostMapping
+    public ResponseEntity<DiscountCardDto> createNewCard(@RequestBody DiscountCardDto newCard) {
         cardService.save(newCard);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -44,8 +44,8 @@ public class DiscountCardController {
         return new ResponseEntity<>(newCard, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update")
-    public ResponseEntity<?> updateCard(@RequestBody DiscountCardDto discountCard) {
+    @PutMapping
+    public ResponseEntity<DiscountCardDto> updateCard(@RequestBody DiscountCardDto discountCard) {
         cardService.update(discountCard);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
@@ -54,8 +54,8 @@ public class DiscountCardController {
         return new ResponseEntity<>(discountCard, headers, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<?> deleteCard(@PathVariable(name = "id") Long discountCardId) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteCard(@PathVariable(name = "id") Long discountCardId) {
         cardService.delete(discountCardId);
         return new ResponseEntity<>("Card deleted successfully.", HttpStatus.ACCEPTED);
     }

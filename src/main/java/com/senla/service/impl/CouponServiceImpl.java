@@ -18,8 +18,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class CouponServiceImpl implements CouponService {
+
     private final ModelMapper modelMapper;
+
     private final CouponRepository couponRepository;
+
     @Override
     public CouponDto save(CouponDto couponDto) {
         Coupon coupon = modelMapper.map(couponDto, Coupon.class);
@@ -29,7 +32,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
 
-    public CouponDto findById(Long id) throws NotFoundException{
+    public CouponDto findById(Long id) throws NotFoundException {
         Coupon coupon = couponRepository.findById(id).orElseThrow(NotFoundException::new);
         return modelMapper.map(coupon, CouponDto.class);
     }
@@ -37,7 +40,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public List<CouponDto> findAll() {
         return couponRepository.findAll().stream()
-                .map(coupon-> modelMapper.map(coupon, CouponDto.class))
+                .map(coupon -> modelMapper.map(coupon, CouponDto.class))
                 .collect(Collectors.toList());
     }
 

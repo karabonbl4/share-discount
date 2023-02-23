@@ -35,9 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
 @Sql("classpath:sql/insert_data.sql")
 class DiscountCardControllerTest {
+
     @Autowired
     private WebApplicationContext webApplicationContext;
+
     private MockMvc mockMvc;
+
     private final static String NEW_CARD = "{\n" +
             "        \"name\": \"silver_card\",\n" +
             "        \"number\": 321321,\n" +
@@ -136,21 +139,21 @@ class DiscountCardControllerTest {
     @SneakyThrows
     @Test
     public void addCard_ResponseCreated() {
-        mockMvc.perform(post("/cards/create").contentType("application/json").content(NEW_CARD))
+        mockMvc.perform(post("/cards").contentType("application/json").content(NEW_CARD))
                 .andExpect(status().isCreated());
     }
 
     @SneakyThrows
     @Test
     public void updateCard_ResponseAccepted() {
-        mockMvc.perform(put("/cards/update").contentType("application/json").content(UPDATING_CARD))
+        mockMvc.perform(put("/cards").contentType("application/json").content(UPDATING_CARD))
                 .andExpect(status().isAccepted());
     }
 
     @SneakyThrows
     @Test
     public void deleteCard_ResponseAccepted() {
-        mockMvc.perform(delete("/cards/delete/{id}", "1"))
+        mockMvc.perform(delete("/cards/{id}", "1"))
                 .andExpect(status().isAccepted());
     }
 }

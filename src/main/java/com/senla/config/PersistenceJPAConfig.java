@@ -2,14 +2,12 @@ package com.senla.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,8 +22,28 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = {"com.senla.dao"})
 @PropertySource(value = "classpath:application.properties")
 public class PersistenceJPAConfig {
-    @Autowired
-    private Environment environment;
+
+    @Value("${datasource.driver}")
+    private String datasourceDriver;
+
+    @Value("${datasource.url}")
+    private String datasourceUrl;
+
+    @Value("${datasource.user}")
+    private String datasourceUser;
+
+    @Value("${datasource.password}")
+    private String datasourcePasssword;
+
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hibernateHbm2ddlAuto;
+
+    @Value("${hibernate.show_sql}")
+    private String hibernateShowSql;
+
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
@@ -39,15 +57,17 @@ public class PersistenceJPAConfig {
 
         return em;
     }
+
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         HikariConfig dataSource = new HikariConfig();
-        dataSource.setDriverClassName(environment.getProperty("datasource.driver"));
-        dataSource.setJdbcUrl(environment.getProperty("datasource.url"));
-        dataSource.setUsername( environment.getProperty("datasource.user") );
-        dataSource.setPassword( environment.getProperty("datasource.password") );
+        dataSource.setDriverClassName(datasourceDriver);
+        dataSource.setJdbcUrl(datasourceUrl);
+        dataSource.setUsername(datasourceUser);
+        dataSource.setPassword(datasourcePasssword);
         return new HikariDataSource(dataSource);
     }
+
     @Bean
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -55,20 +75,18 @@ public class PersistenceJPAConfig {
 
         return transactionManager;
     }
+
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
+
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
-        properties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
-        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect"));
+        properties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
+        properties.setProperty("hibernate.show_sql", hibernateShowSql);
+        properties.setProperty("hibernate.dialect", hibernateDialect);
 
         return properties;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
     }
 }

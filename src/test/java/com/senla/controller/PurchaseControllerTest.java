@@ -36,9 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PurchaseControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
+
     private MockMvc mockMvc;
+
     private final static String ROOT_URL = "/purchases";
+
     private final static String CONTENT_JSON = "application/json";
+
     private final static String NEW_DATA = "{\n" +
             "        \"name\": \"testPurchase\",\n" +
             "        \"transactionDate\": \"2023-02-15 15:10:00\",\n" +
@@ -134,7 +138,7 @@ class PurchaseControllerTest {
     @SneakyThrows
     @Test
     public void addPurchase_ResponseCreated() {
-        mockMvc.perform(post(ROOT_URL.concat("/create")).contentType(CONTENT_JSON).content(NEW_DATA))
+        mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
     }
 
@@ -142,7 +146,7 @@ class PurchaseControllerTest {
     @SneakyThrows
     @Test
     public void deletePurchase_ResponseAccepted() {
-        mockMvc.perform(delete(ROOT_URL.concat("/delete/{id}"), "1"))
+        mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());
     }
 }
