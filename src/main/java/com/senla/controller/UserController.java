@@ -1,39 +1,55 @@
 package com.senla.controller;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senla.model.dto.UserDto;
 import com.senla.service.UserService;
-import com.senla.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/users")
 public class UserController {
-
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
-    @SneakyThrows
-    public String findById(String id){
-        long lId = Long.parseLong(id);
-        UserDto byId = userService.findById(lId);
-        return objectMapper.writeValueAsString(byId);
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+        return userService.findAll();
     }
-    @SneakyThrows
-    public String update(String user){
-        UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        return objectMapper.writeValueAsString(userDto);
+
+    @GetMapping(value = "/{id}")
+    public UserDto getById(@PathVariable(name = "id") Long userId) {
+        return userService.findById(userId);
     }
-    @SneakyThrows
-    public String save(String user){
-        UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        return objectMapper.writeValueAsString(userDto);
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto newUser) {
+        userService.save(newUser);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(newUser.getFirstName())
+                .toUri());
+        return new ResponseEntity<>(newUser, headers, HttpStatus.CREATED);
     }
-    @SneakyThrows
-    public void delete(String user){
-        UserDto userDto = objectMapper.readValue(user, UserDto.class);
-        userService.delete(userDto);
+
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userUpd) {
+        userService.update(userUpd);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(userUpd.getFirstName())
+                .toUri());
+        return new ResponseEntity<>(userUpd, headers, HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name = "id") Long userId) {
+        userService.delete(userId);
+        return new ResponseEntity<>("User deleted successfully.", HttpStatus.ACCEPTED);
     }
 }

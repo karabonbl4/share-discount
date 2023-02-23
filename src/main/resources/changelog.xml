@@ -49,8 +49,5 @@
         <sqlFile encoding="utf8" path="./sql/10.create-purchase-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-insert" author="Lesha Korobko">
-        <sqlFile encoding="utf8" path="./sql/11.insert_data.sql" relativeToChangelogFile="true"/>
-    </changeSet>
 
 </databaseChangeLog> 

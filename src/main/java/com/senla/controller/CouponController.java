@@ -1,48 +1,63 @@
 package com.senla.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senla.service.CouponService;
-import com.senla.service.dto.CouponDto;
-import com.senla.service.dto.PurchaseDto;
+import com.senla.model.dto.CouponDto;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
-@Controller
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/coupons")
 public class CouponController {
 
     private final CouponService couponService;
-    private final ObjectMapper objectMapper;
 
-    @SneakyThrows
-    public String findById(String id){
-        Long l = Long.parseLong(id);
-        CouponDto couponDto = couponService.findById(l);
-        return objectMapper.writeValueAsString(couponDto);
+
+    @GetMapping
+    public List<CouponDto> getAllCoupons() {
+        return couponService.findAll();
     }
 
-    @SneakyThrows
-    public void save(String newCoupon){
-        CouponDto newCouponDto = objectMapper.readValue(newCoupon, CouponDto.class);
-        couponService.save(newCouponDto);
+    @GetMapping(value = "/{id}")
+    public CouponDto getCouponById(@PathVariable(name = "id") Long couponId) {
+        return couponService.findById(couponId);
     }
 
-    @SneakyThrows
-    public void delete(String coupon){
-        CouponDto couponDto = objectMapper.readValue(coupon, CouponDto.class);
+    @GetMapping(value = "/purchase/{id}")
+    public CouponDto getCouponByPurchase(@PathVariable(name = "id") Long purchaseId) {
+        return couponService.findByPurchaseId(purchaseId);
     }
 
-    @SneakyThrows
-    public void update(String coupon){
-        CouponDto couponDto = objectMapper.readValue(coupon, CouponDto.class);
-        couponService.update(couponDto);
+    @PostMapping
+    public ResponseEntity<CouponDto> addCoupon(@RequestBody CouponDto newCoupon) {
+        couponService.save(newCoupon);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(newCoupon.getName())
+                .toUri());
+        return new ResponseEntity<>(newCoupon, headers, HttpStatus.CREATED);
     }
 
-    @SneakyThrows
-    public String getCouponByPurchase(String purchase){
-        PurchaseDto purchaseDto = objectMapper.readValue(purchase, PurchaseDto.class);
-        CouponDto byPurchase = couponService.findByPurchase(purchaseDto);
-        return objectMapper.writeValueAsString(byPurchase);
+    @PutMapping
+    public ResponseEntity<CouponDto> updateCoupon(@RequestBody CouponDto updateCoupon) {
+        couponService.update(updateCoupon);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}")
+                .buildAndExpand(updateCoupon.getName())
+                .toUri());
+        return new ResponseEntity<>(updateCoupon, headers, HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteCoupon(@PathVariable(name = "id") Long couponId) {
+        couponService.delete(couponId);
+        return new ResponseEntity<>("Coupon deleted successfully.", HttpStatus.ACCEPTED);
     }
 }

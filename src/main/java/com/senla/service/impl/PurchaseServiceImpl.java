@@ -1,32 +1,38 @@
 package com.senla.service.impl;
 
-import com.senla.model.Purchase;
-import com.senla.repository.PurchaseRepository;
+import com.senla.dao.PurchaseRepository;
+import com.senla.exceptions.NotFoundException;
+import com.senla.model.entity.Purchase;
 import com.senla.service.PurchaseService;
-import com.senla.service.dto.PurchaseDto;
+import com.senla.model.dto.PurchaseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PurchaseServiceImpl implements PurchaseService {
+
     private final ModelMapper modelMapper;
+
     private final PurchaseRepository purchaseRepository;
 
 
     @Override
-    public void save(PurchaseDto purchaseDto) {
+    public PurchaseDto save(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.save(purchase);
+        Purchase returnedPurchaseAfterSaving = purchaseRepository.save(purchase);
+        return modelMapper.map(returnedPurchaseAfterSaving, PurchaseDto.class);
     }
 
     @Override
-    public PurchaseDto findById(Long id) {
-        Purchase purchase = purchaseRepository.findById(id);
+    public PurchaseDto findById(Long id) throws NotFoundException{
+        Purchase purchase = purchaseRepository.findById(id).orElseThrow(NotFoundException::new);
         return modelMapper.map(purchase, PurchaseDto.class);
     }
 
@@ -38,14 +44,29 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void delete(PurchaseDto purchaseDto) {
-        Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.delete(purchase);
+    public void delete(Long purchaseId) {
+        Purchase purchaseForDeleting = purchaseRepository.getReferenceById(purchaseId);
+        purchaseRepository.delete(purchaseForDeleting);
     }
 
     @Override
-    public void update(PurchaseDto purchaseDto) {
+    public PurchaseDto update(PurchaseDto purchaseDto) {
         Purchase purchase = modelMapper.map(purchaseDto, Purchase.class);
-        purchaseRepository.update(purchase);
+        Purchase returnedPurchaseAfterUpdating = purchaseRepository.saveAndFlush(purchase);
+        return modelMapper.map(returnedPurchaseAfterUpdating, PurchaseDto.class);
+    }
+
+    @Override
+    public List<PurchaseDto> findByCardId(Long id) {
+        return purchaseRepository.findByCard_Id(id).stream()
+                .map(purchase -> modelMapper.map(purchase, PurchaseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PurchaseDto> findByUserId(Long id) {
+        return purchaseRepository.findByUser_Id(id).stream()
+                .map(purchase -> modelMapper.map(purchase, PurchaseDto.class))
+                .collect(Collectors.toList());
     }
 }

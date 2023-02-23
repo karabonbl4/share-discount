@@ -1,11 +1,14 @@
 package com.senla.service;
 
-import com.senla.service.dto.TrademarkDto;
+import com.senla.model.dto.TrademarkDto;
+
+import java.util.List;
 
 
 public interface TrademarkService {
-    void save(TrademarkDto trademarkDto);
+    TrademarkDto save(TrademarkDto trademarkDto);
     TrademarkDto findById(Long id);
-    boolean delete(TrademarkDto trademarkDto);
-    void update(TrademarkDto trademarkDto);
+    void delete(Long trademarkId);
+    TrademarkDto update(TrademarkDto trademarkDto);
+    List<TrademarkDto> findAll();
 }
