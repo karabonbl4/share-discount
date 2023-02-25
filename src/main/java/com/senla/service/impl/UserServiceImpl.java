@@ -1,15 +1,20 @@
 package com.senla.service.impl;
 
+import com.senla.dao.RoleRepository;
 import com.senla.dao.UserRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.exceptions.AlreadyExistException;
+import com.senla.exceptions.EntityNotFoundException;
+import com.senla.model.entity.Role;
 import com.senla.model.entity.User;
 import com.senla.service.UserService;
 import com.senla.model.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,17 +27,27 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    private final RoleRepository roleRepository;
+
     @Override
+    @Transactional
     public UserDto save(UserDto userDto) {
+        if (userRepository.findByUsername(userDto.getUsername()) != null) {
+            throw new AlreadyExistException(userDto.getUsername());
+        }
         User user = modelMapper.map(userDto, User.class);
-        User returnedUserAfterSaving = userRepository.save(user);
-        return modelMapper.map(returnedUserAfterSaving, UserDto.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singletonList(roleRepository.save(new Role("ROLE_USER"))));
+        return modelMapper.map(userRepository.save(user), UserDto.class);
     }
 
     @Override
-    public UserDto findById(Long id) throws NotFoundException{
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
-        return modelMapper.map(user, UserDto.class);
+    public UserDto findById(Long id) throws EntityNotFoundException {
+        return userRepository.findById(id)
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

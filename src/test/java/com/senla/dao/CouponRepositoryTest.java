@@ -1,7 +1,7 @@
 package com.senla.dao;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.model.entity.Coupon;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
         classes = {TestJPAConfig.class,
-                TestLiquibaseConfiguration.class
+                LiquibaseConfig.class
         },
         loader = AnnotationConfigContextLoader.class)
 @Sql(scripts = "classpath:sql/insert_data.sql")
@@ -27,9 +27,9 @@ public class CouponRepositoryTest {
 
     @Test
     @Transactional
-    public void getCouponByPurchases_Id() {
-        Coupon couponByPurchases_id = repository.getCouponByPurchases_Id(1L);
-        String actualName = couponByPurchases_id.getName();
+    public void getCouponByPurchase_Id() {
+        Coupon couponByPurchase_id = repository.getCouponByPurchase_Id(1L);
+        String actualName = couponByPurchase_id.getName();
 
         String expectName = "coupon1";
 

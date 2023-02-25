@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,17 +19,19 @@ public class DiscountCardController {
 
     private final DiscountCardService cardService;
 
+    @Secured(value = {"ROLE_ADMIN"})
     @GetMapping
     public List<DiscountCardDto> getAllCards() {
         return cardService.findAll();
     }
 
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(value = "/{id}")
     public DiscountCardDto getCardById(@PathVariable(name = "id") Long cardId) {
         return cardService.findById(cardId);
     }
 
-
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(value = "/user/{id}")
     public List<DiscountCardDto> getCardByUserId(@PathVariable(name = "id") Long userId) {
         return cardService.getCardsByUserId(userId);

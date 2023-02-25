@@ -1,15 +1,18 @@
 package com.senla.controller;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.WebConfig;
+import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,8 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
-@Sql("classpath:sql/insert_data.sql")
+@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, LiquibaseConfig.class, WebSecurityConfig.class})
 class TrademarkControllerTest {
 
     @Autowired
@@ -55,9 +58,16 @@ class TrademarkControllerTest {
             "    }";
 
     @BeforeEach
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity()).build();
+    }
+
+    @AfterEach
+    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
+    public void destroyDB() {
     }
 
     @Test
@@ -71,6 +81,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getAllTrademarks_ResponseOk() {
         mockMvc.perform(get(ROOT_URL))
                 .andDo(print())
@@ -80,6 +91,8 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getTrademarkById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -89,6 +102,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void addTrademark_ResponseCreated() {
         mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
@@ -96,6 +110,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void updateTrademark_ResponseAccepted() {
         mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))
                 .andExpect(status().isAccepted())
@@ -104,6 +119,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void deleteTrademark_ResponseAccepted() {
         mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());

@@ -39,16 +39,22 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'org.springframework.data:spring-data-rest-webmvc:3.5.0'
     implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'org.springframework.security:spring-security-core:5.7.5'
+    implementation 'org.springframework.security:spring-security-web:5.7.5'
+    implementation 'org.springframework.security:spring-security-config:5.7.5'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
     testImplementation 'org.mockito:mockito-core:4.6.0'
     testImplementation 'org.springframework:spring-test:5.3.20'
     testImplementation 'com.h2database:h2:2.1.214'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.8.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0'
     testImplementation 'org.junit.platform:junit-platform-launcher:1.8.0'
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor "org.projectlombok:lombok:1.18.24"
+    testImplementation 'org.springframework.security:spring-security-test:5.7.5'
 }
 test {
     useJUnitPlatform()

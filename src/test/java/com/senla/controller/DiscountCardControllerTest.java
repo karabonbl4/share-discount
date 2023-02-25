@@ -1,15 +1,18 @@
 package com.senla.controller;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.WebConfig;
+import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,8 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
-@Sql("classpath:sql/insert_data.sql")
+@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, LiquibaseConfig.class, WebSecurityConfig.class})
 class DiscountCardControllerTest {
 
     @Autowired
@@ -53,7 +56,9 @@ class DiscountCardControllerTest {
             "            \"email\": \"ivan@ivanov.by\",\n" +
             "            \"birthday\": null,\n" +
             "            \"score\": 0.00,\n" +
-            "            \"isActive\": false\n" +
+            "            \"isActive\": false,\n" +
+            "            \"username\": \"user\",\n" +
+            "            \"password\": \"password\"\n" +
             "        },\n" +
             "        \"discountPolicyId\": {\n" +
             "            \"id\": 1,\n" +
@@ -80,7 +85,9 @@ class DiscountCardControllerTest {
             "            \"email\": \"ivan@ivanov.by\",\n" +
             "            \"birthday\": null,\n" +
             "            \"score\": 0.00,\n" +
-            "            \"isActive\": false\n" +
+            "            \"isActive\": false,\n" +
+            "            \"username\": \"user\",\n" +
+            "            \"password\": \"password\"\n" +
             "        },\n" +
             "        \"discountPolicyId\": {\n" +
             "            \"id\": 1,\n" +
@@ -96,9 +103,16 @@ class DiscountCardControllerTest {
             "    }";
 
     @BeforeEach
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity()).build();
+    }
+
+    @AfterEach
+    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
+    public void destroyDB() {
     }
 
     @Test
@@ -112,6 +126,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getAllCards_ResponseOk() {
         mockMvc.perform(get("/cards"))
                 .andDo(print())
@@ -121,6 +136,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getCardById_ResponseOk() {
         mockMvc.perform(get("/cards/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -130,6 +146,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getCardByUser_ResponseOk() {
         mockMvc.perform(get("/cards/user/{id}", "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -138,6 +155,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void addCard_ResponseCreated() {
         mockMvc.perform(post("/cards").contentType("application/json").content(NEW_CARD))
                 .andExpect(status().isCreated());
@@ -145,6 +163,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void updateCard_ResponseAccepted() {
         mockMvc.perform(put("/cards").contentType("application/json").content(UPDATING_CARD))
                 .andExpect(status().isAccepted());
@@ -152,6 +171,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void deleteCard_ResponseAccepted() {
         mockMvc.perform(delete("/cards/{id}", "1"))
                 .andExpect(status().isAccepted());

@@ -1,15 +1,18 @@
 package com.senla.controller;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.WebConfig;
+import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,8 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
-@Sql("classpath:sql/insert_data.sql")
+@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, LiquibaseConfig.class, WebSecurityConfig.class})
 class UserControllerTest {
 
     @Autowired
@@ -52,7 +55,9 @@ class UserControllerTest {
             "        \"email\": \"ivan@Test.by\",\n" +
             "        \"birthday\": null,\n" +
             "        \"score\": 0.50,\n" +
-            "        \"isActive\": true\n" +
+            "        \"isActive\": true,\n" +
+            "        \"username\": \"user\",\n" +
+            "        \"password\": \"password\"\n" +
             "    }";
     private final static String UPDATING_DATA = "{\n" +
             "        \"id\": 1,\n" +
@@ -62,13 +67,22 @@ class UserControllerTest {
             "        \"email\": \"ivan@ivanov.by\",\n" +
             "        \"birthday\": null,\n" +
             "        \"score\": 0.00,\n" +
-            "        \"isActive\": false\n" +
+            "        \"isActive\": false,\n" +
+            "        \"username\": \"user\",\n" +
+            "        \"password\": \"password\"\n" +
             "    }";
 
     @BeforeEach
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity()).build();
+    }
+
+    @AfterEach
+    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
+    public void destroyDB() {
     }
 
     @Test
@@ -82,6 +96,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getAllUsers_ResponseOk() {
         mockMvc.perform(get(ROOT_URL))
                 .andDo(print())
@@ -91,6 +106,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getUserById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -100,13 +116,15 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void addUser_ResponseCreated() {
-        mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
+        mockMvc.perform(post(ROOT_URL.concat("/registration")).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
     }
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void updateUser_ResponseAccepted() {
         mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))
                 .andExpect(status().isAccepted())
@@ -115,9 +133,9 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void deleteUser_ResponseAccepted() {
         mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());
     }
-
 }

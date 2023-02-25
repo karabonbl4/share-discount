@@ -21,4 +21,5 @@ public class TrademarkDto {
     private List<CouponDto> coupons;
     @JsonIgnore
     private List<DiscountPolicyDto> discountPolicies;
+
 }

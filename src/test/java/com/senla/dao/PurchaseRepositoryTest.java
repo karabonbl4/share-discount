@@ -1,7 +1,7 @@
 package com.senla.dao;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.model.entity.Purchase;
 
 import org.junit.Test;
@@ -20,11 +20,12 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
         classes = {TestJPAConfig.class,
-                TestLiquibaseConfiguration.class
+                LiquibaseConfig.class
         },
         loader = AnnotationConfigContextLoader.class)
 @Sql(scripts = "classpath:sql/insert_data.sql")
 public class PurchaseRepositoryTest {
+    
     @Autowired
     private PurchaseRepository purchaseRepository;
 

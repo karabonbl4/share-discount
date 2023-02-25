@@ -1,15 +1,18 @@
 package com.senla.controller;
 
+import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
-import com.senla.config.TestLiquibaseConfiguration;
 import com.senla.config.WebConfig;
+import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,8 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, TestLiquibaseConfiguration.class})
-@Sql("classpath:sql/insert_data.sql")
+@ContextConfiguration(classes = {WebConfig.class, TestJPAConfig.class, LiquibaseConfig.class, WebSecurityConfig.class})
 class PurchaseControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -55,7 +58,9 @@ class PurchaseControllerTest {
             "            \"email\": \"ivan@ivanov.by\",\n" +
             "            \"birthday\": null,\n" +
             "            \"score\": 0.00,\n" +
-            "            \"isActive\": false\n" +
+            "            \"isActive\": false,\n" +
+            "            \"username\": \"user\",\n" +
+            "            \"password\": \"password\"\n" +
             "        },\n" +
             "        \"card\": {\n" +
             "            \"id\": 1,\n" +
@@ -70,7 +75,9 @@ class PurchaseControllerTest {
             "                \"email\": \"ivan@ivanov.by\",\n" +
             "                \"birthday\": null,\n" +
             "                \"score\": 0.00,\n" +
-            "                \"isActive\": false\n" +
+            "                \"isActive\": false,\n" +
+            "                \"username\": \"user\",\n" +
+            "                \"password\": \"password\"\n" +
             "            },\n" +
             "            \"discountPolicyId\": {\n" +
             "                \"id\": 1,\n" +
@@ -87,9 +94,16 @@ class PurchaseControllerTest {
             "    }";
 
     @BeforeEach
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity()).build();
+    }
+
+    @AfterEach
+    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
+    public void destroyDB() {
     }
 
     @Test
@@ -103,6 +117,7 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getAllPurchases_ResponseOk() {
         mockMvc.perform(get(ROOT_URL))
                 .andDo(print())
@@ -112,6 +127,8 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getPurchaseById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -121,6 +138,7 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getPurchaseByUser_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/user/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -129,6 +147,7 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void getPurchaseByCard_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/card/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -137,6 +156,8 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void addPurchase_ResponseCreated() {
         mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
@@ -145,6 +166,7 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
+    @WithMockUser
     public void deletePurchase_ResponseAccepted() {
         mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());

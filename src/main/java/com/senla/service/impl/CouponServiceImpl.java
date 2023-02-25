@@ -2,8 +2,10 @@ package com.senla.service.impl;
 
 
 import com.senla.dao.CouponRepository;
-import com.senla.exceptions.NotFoundException;
+import com.senla.dao.PurchaseRepository;
+import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.Coupon;
+import com.senla.model.entity.Purchase;
 import com.senla.service.CouponService;
 import com.senla.model.dto.CouponDto;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +34,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
 
-    public CouponDto findById(Long id) throws NotFoundException {
-        Coupon coupon = couponRepository.findById(id).orElseThrow(NotFoundException::new);
+
+    public CouponDto findById(Long id) throws EntityNotFoundException {
+        Coupon coupon = couponRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(coupon, CouponDto.class);
     }
 
@@ -52,7 +55,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public CouponDto findByPurchaseId(Long id) {
-        Coupon couponByPurchase = couponRepository.getCouponByPurchases_Id(id);
+        Coupon couponByPurchase = couponRepository.getCouponByPurchase_Id(id);
         return modelMapper.map(couponByPurchase, CouponDto.class);
     }
 

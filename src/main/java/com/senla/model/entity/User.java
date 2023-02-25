@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "\"user\"")
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +36,9 @@ public class User {
     private Boolean isActive;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Purchase> purchases;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private Set<Coupon> coupons;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
@@ -45,5 +46,17 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "admin_trademark", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trademark_id"))
     private Set<Trademark> trademarks;
+    @Column
+    private String username;
+    @Column
+    private String password;
+    @Column(name = "account_non_expired")
+    private boolean accountNonExpired;
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked;
+    @Column(name = "credentials_non_expired")
+    private boolean credentialsNonExpired;
+    @Column
+    private boolean enabled;
 
 }

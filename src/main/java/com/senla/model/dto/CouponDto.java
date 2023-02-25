@@ -34,7 +34,7 @@ public class CouponDto {
     private Boolean used;
     private TrademarkDto trademark;
     @JsonIgnore
-    private List<PurchaseDto> purchases;
+    private PurchaseDto purchase;
     @JsonIgnore
     private List<UserDto> users;
 }
