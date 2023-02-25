@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +30,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     private @NotNull Collection<? extends GrantedAuthority> grantedAuthorities(@NotNull User user){
-        var authorities = new ArrayList<GrantedAuthority>();
-        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-        return authorities;
+       return user.getRoles().stream()
+                .map(role-> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 }

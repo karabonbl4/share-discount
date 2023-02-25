@@ -2,6 +2,7 @@ package com.senla.service.impl;
 
 import com.senla.dao.RoleRepository;
 import com.senla.dao.UserRepository;
+import com.senla.exceptions.AlreadyExistException;
 import com.senla.exceptions.EntityNotFoundException;
 import com.senla.model.entity.Role;
 import com.senla.model.entity.User;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto save(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()) != null) {
-            return null;
+            throw new AlreadyExistException(userDto.getUsername());
         }
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,8 +45,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) throws EntityNotFoundException {
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        return modelMapper.map(user, UserDto.class);
+        return userRepository.findById(id)
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

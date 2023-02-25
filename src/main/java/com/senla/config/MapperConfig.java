@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 public class MapperConfig {
 
     @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
@@ -27,7 +26,6 @@ public class MapperConfig {
     }
 
     @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

@@ -1,5 +1,6 @@
 package com.senla.exceptions.handler;
 
+import com.senla.exceptions.AlreadyExistException;
 import com.senla.exceptions.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +64,13 @@ public class DefaultAdvise {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(@NotNull MethodArgumentTypeMismatchException e){
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST);
+        log.error(String.valueOf(errorResponse));
+        return errorResponse;
+    }
+    @ExceptionHandler(AlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleAlreadyExistException(@NotNull AlreadyExistException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.CONFLICT);
         log.error(String.valueOf(errorResponse));
         return errorResponse;
     }
