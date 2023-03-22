@@ -1,11 +1,10 @@
 package com.senla.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +18,7 @@ public class Role {
     private Long id;
     @Column
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
+    @ManyToMany(cascade = CascadeType.DETACH, mappedBy = "roles")
     private List<User> users;
 
     public Role(String name){

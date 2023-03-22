@@ -1,4 +1,4 @@
-package com.senla.exceptions.handler;
+package com.senla.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

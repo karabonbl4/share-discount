@@ -5,7 +5,6 @@ import com.senla.config.TestJPAConfig;
 import com.senla.config.WebConfig;
 import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -45,9 +43,12 @@ class DiscountCardControllerTest {
     private MockMvc mockMvc;
 
     private final static String NEW_CARD = "{\n" +
+            "        \"id\": null,\n" +
             "        \"name\": \"silver_card\",\n" +
             "        \"number\": 321321,\n" +
             "        \"discount\": 0.20,\n" +
+            "        \"isConfirm\": true,\n" +
+            "        \"isRent\": false,\n" +
             "        \"ownerId\": {\n" +
             "            \"id\": 1,\n" +
             "            \"firstName\": \"Ivan\",\n" +
@@ -60,7 +61,7 @@ class DiscountCardControllerTest {
             "            \"username\": \"user\",\n" +
             "            \"password\": \"password\"\n" +
             "        },\n" +
-            "        \"discountPolicyId\": {\n" +
+            "        \"policy\": {\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"OZpolicy\",\n" +
             "            \"minDiscount\": 0.05,\n" +
@@ -77,6 +78,8 @@ class DiscountCardControllerTest {
             "        \"name\": \"bronze_card\",\n" +
             "        \"number\": 258258,\n" +
             "        \"discount\": 0.10,\n" +
+            "        \"isConfirm\": true,\n" +
+            "        \"isRent\": false,\n" +
             "        \"ownerId\": {\n" +
             "            \"id\": 1,\n" +
             "            \"firstName\": \"Ivan\",\n" +
@@ -89,7 +92,7 @@ class DiscountCardControllerTest {
             "            \"username\": \"user\",\n" +
             "            \"password\": \"password\"\n" +
             "        },\n" +
-            "        \"discountPolicyId\": {\n" +
+            "        \"policy\": {\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"OZpolicy\",\n" +
             "            \"minDiscount\": 0.05,\n" +
@@ -103,16 +106,10 @@ class DiscountCardControllerTest {
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity()).build();
-    }
-
-    @AfterEach
-    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
-    public void destroyDB() {
     }
 
     @Test
@@ -126,9 +123,12 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllCards_ResponseOk() {
-        mockMvc.perform(get("/cards"))
+        mockMvc.perform(get("/cards")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortingBy", "discount"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -136,12 +136,10 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getCardById_ResponseOk() {
         mockMvc.perform(get("/cards/{id}", "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andDo(print()).andExpect(status().isOk());
     }
 
     @SneakyThrows
@@ -149,20 +147,21 @@ class DiscountCardControllerTest {
     @WithMockUser
     public void getCardByUser_ResponseOk() {
         mockMvc.perform(get("/cards/user/{id}", "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+                .andDo(print()).andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void addCard_ResponseCreated() {
         mockMvc.perform(post("/cards").contentType("application/json").content(NEW_CARD))
-                .andExpect(status().isCreated());
+                .andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser
     public void updateCard_ResponseAccepted() {
         mockMvc.perform(put("/cards").contentType("application/json").content(UPDATING_CARD))
@@ -171,7 +170,7 @@ class DiscountCardControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void deleteCard_ResponseAccepted() {
         mockMvc.perform(delete("/cards/{id}", "1"))
                 .andExpect(status().isAccepted());

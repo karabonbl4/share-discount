@@ -1,11 +1,9 @@
 package com.senla.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.senla.model.dto.save.DiscountCardWithPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +23,6 @@ public class PurchaseDto {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime transactionDate;
     private BigDecimal sum;
-    //    @JsonIgnore
-    private UserDto user;
-    //    @JsonIgnore
-    private DiscountCardDto card;
-    @JsonIgnore
-    private CouponDto coupon;
+    private UserDto buyer;
+    private DiscountCardWithPolicy card;
 }

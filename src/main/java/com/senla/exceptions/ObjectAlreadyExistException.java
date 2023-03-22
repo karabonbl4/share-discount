@@ -1,8 +1,8 @@
 package com.senla.exceptions;
 
-public class AlreadyExistException extends RuntimeException{
+public class ObjectAlreadyExistException extends Exception{
 
-    public AlreadyExistException(String title){
+    public ObjectAlreadyExistException(String title){
         super(String.format("Entity with name(title): %s already exist!", title));
     }
 }

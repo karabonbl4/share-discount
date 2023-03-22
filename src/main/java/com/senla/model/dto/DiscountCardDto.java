@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,12 +15,14 @@ import java.util.List;
 public class DiscountCardDto {
 
     private Long id;
+
     private String name;
+
     private Long number;
+
     private BigDecimal discount;
-    @JsonIgnore
-    private UserDto ownerId;
-    private DiscountPolicyDto discountPolicyId;
-    @JsonIgnore
-    private List<PurchaseDto> purchases;
+
+    private Boolean isConfirm;
+
+    private Boolean isRent;
 }

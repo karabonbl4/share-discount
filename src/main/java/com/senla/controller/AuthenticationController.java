@@ -21,9 +21,7 @@ public class AuthenticationController {
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) {
         jwtTokenUtils.validateJwtRequest(jwtRequest);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
-
         String generatedToken = jwtTokenUtils.generateToken(jwtRequest.getUsername());
-
         return new JwtResponse(generatedToken);
     }
 }
