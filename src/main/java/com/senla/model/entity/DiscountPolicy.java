@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -19,17 +18,23 @@ public class DiscountPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private String title;
+
     @Column(name = "min_discount")
     private BigDecimal minDiscount;
+
     @Column(name = "max_discount")
     private BigDecimal maxDiscount;
+
     @Column(name = "discount_step")
     private BigDecimal discountStep;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "trademark_id")
     private Trademark trademark;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discountPolicy")
-    private Set<DiscountCard> discountCards;
+
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "discountPolicy")
+    private List<DiscountCard> discountCards;
 }

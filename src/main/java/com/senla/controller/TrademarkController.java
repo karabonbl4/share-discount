@@ -3,6 +3,7 @@ package com.senla.controller;
 import com.senla.model.dto.TrademarkDto;
 import com.senla.service.TrademarkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,11 @@ import java.util.List;
 public class TrademarkController {
     private final TrademarkService trademarkService;
 
-    @Secured(value = {"ROLE_ADMIN"})
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping
-    public List<TrademarkDto> getAllTrademarks() {
-        return trademarkService.findAll();
+    public List<TrademarkDto> getAllTrademarks(@Param("pageNumber") Integer pageNumber,
+                                               @Param("pageSize") Integer pageSize) {
+        return trademarkService.findAll(pageNumber, pageSize);
     }
 
     @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
@@ -30,6 +32,7 @@ public class TrademarkController {
         return trademarkService.findById(trademarkId);
     }
 
+    @Secured(value = "ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<TrademarkDto> createTrademark(@RequestBody TrademarkDto newTrademark) {
         trademarkService.save(newTrademark);
@@ -40,6 +43,7 @@ public class TrademarkController {
         return new ResponseEntity<>(newTrademark, headers, HttpStatus.CREATED);
     }
 
+    @Secured(value = "ROLE_USER")
     @PutMapping
     public ResponseEntity<TrademarkDto> updateTrademark(@RequestBody TrademarkDto trademarkUpd) {
         trademarkService.update(trademarkUpd);
@@ -50,6 +54,7 @@ public class TrademarkController {
         return new ResponseEntity<>(trademarkUpd, headers, HttpStatus.ACCEPTED);
     }
 
+    @Secured(value = "ROLE_ADMIN")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteTrademark(@PathVariable(name = "id") Long trademarkId) {
         trademarkService.delete(trademarkId);

@@ -68,7 +68,7 @@ public class TrademarkServiceImplTest {
 
     @Test
     public void shouldFindAllTrademarksSuccessfully() {
-        trademarkService.findAll();
+        trademarkService.findAll(1, 100);
 
         verify(trademarkRepository).findAll();
     }

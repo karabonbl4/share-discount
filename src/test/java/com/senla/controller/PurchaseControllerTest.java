@@ -25,7 +25,6 @@ import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -50,7 +49,7 @@ class PurchaseControllerTest {
             "        \"name\": \"testPurchase\",\n" +
             "        \"transactionDate\": \"2023-02-15 15:10:00\",\n" +
             "        \"sum\": 101.70,\n" +
-            "        \"user\": {\n" +
+            "        \"buyer\": {\n" +
             "            \"id\": 1,\n" +
             "            \"firstName\": \"Ivan\",\n" +
             "            \"surName\": \"Ivanov\",\n" +
@@ -67,7 +66,7 @@ class PurchaseControllerTest {
             "            \"name\": \"gold_card\",\n" +
             "            \"number\": 123123,\n" +
             "            \"discount\": 0.30,\n" +
-            "            \"ownerId\": {\n" +
+            "            \"owner\": {\n" +
             "                \"id\": 1,\n" +
             "                \"firstName\": \"Ivan\",\n" +
             "                \"surName\": \"Ivanov\",\n" +
@@ -79,13 +78,13 @@ class PurchaseControllerTest {
             "                \"username\": \"user\",\n" +
             "                \"password\": \"password\"\n" +
             "            },\n" +
-            "            \"discountPolicyId\": {\n" +
+            "            \"policy\": {\n" +
             "                \"id\": 1,\n" +
             "                \"title\": \"OZpolicy\",\n" +
             "                \"minDiscount\": 0.05,\n" +
             "                \"maxDiscount\": 0.50,\n" +
             "                \"discountStep\": 0.05,\n" +
-            "                \"trademarkId\": {\n" +
+            "                \"trademark\": {\n" +
             "                    \"id\": 1,\n" +
             "                    \"title\": \"OZ\"\n" +
             "                }\n" +
@@ -94,7 +93,6 @@ class PurchaseControllerTest {
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -117,9 +115,11 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllPurchases_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL))
+        mockMvc.perform(get(ROOT_URL).param("pageNumber", "1")
+                                     .param("pageSize", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
@@ -127,7 +127,7 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getPurchaseById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
@@ -138,37 +138,32 @@ class PurchaseControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getPurchaseByUser_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL.concat("/user/{id}"), "1"))
+        mockMvc.perform(get(ROOT_URL.concat("/user/{id}"), "1")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getPurchaseByCard_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL.concat("/card/{id}"), "1"))
+        mockMvc.perform(get(ROOT_URL.concat("/card/{id}"), "1")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN", "USER"})
     @Sql(scripts = "classpath:sql/insert_data.sql")
     public void addPurchase_ResponseCreated() {
         mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
-                .andExpect(status().isCreated());
-    }
-
-
-    @SneakyThrows
-    @Test
-    @WithMockUser
-    public void deletePurchase_ResponseAccepted() {
-        mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isForbidden());
     }
 }

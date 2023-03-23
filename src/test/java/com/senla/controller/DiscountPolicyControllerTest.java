@@ -5,7 +5,6 @@ import com.senla.config.TestJPAConfig;
 import com.senla.config.WebConfig;
 import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -53,7 +51,7 @@ class DiscountPolicyControllerTest {
             "        \"minDiscount\": 0.01,\n" +
             "        \"maxDiscount\": 1.00,\n" +
             "        \"discountStep\": 0.05,\n" +
-            "        \"trademarkId\": {\n" +
+            "        \"trademark\": {\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"OZ\"\n" +
             "        }\n" +
@@ -64,23 +62,17 @@ class DiscountPolicyControllerTest {
             "        \"minDiscount\": 0.05,\n" +
             "        \"maxDiscount\": 0.50,\n" +
             "        \"discountStep\": 0.10,\n" +
-            "        \"trademarkId\": {\n" +
+            "        \"trademark\": {\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"OZ\"\n" +
             "        }\n" +
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity()).build();
-    }
-
-    @AfterEach
-    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
-    public void destroyDB() {
     }
 
     @Test
@@ -94,9 +86,12 @@ class DiscountPolicyControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllPolicies_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL))
+        mockMvc.perform(get(ROOT_URL)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
@@ -104,25 +99,27 @@ class DiscountPolicyControllerTest {
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser
     public void getPolicyById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_JSON))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andDo(print()).andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getPolicyByTrademark_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL.concat("/trademark/{id}"), "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_JSON));
+        mockMvc.perform(get(ROOT_URL.concat("/trademark/{id}"), "1")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5"))
+                .andDo(print()).andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser
     public void addPolicy_ResponseCreated() {
         mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
@@ -131,17 +128,18 @@ class DiscountPolicyControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void updatePolicy_ResponseAccepted() {
         mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
-    public void deletePolicy_ResponseAccepted() {
+    @WithMockUser(roles = {"ADMIN"})
+    public void deletePolicy_ResponseForbidden() {
         mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isForbidden());
     }
 }

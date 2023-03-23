@@ -2,6 +2,7 @@ package com.senla.service.impl;
 
 import com.senla.dao.DiscountPolicyRepository;
 import com.senla.model.dto.DiscountPolicyDto;
+import com.senla.model.dto.save.DiscountPolicyForSave;
 import com.senla.model.entity.DiscountPolicy;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +41,11 @@ public class DiscountPolicyServiceImplTest {
 
     @Test
     public void shouldSavePolicySuccessfully() {
-        final DiscountPolicyDto policyDto = mock(DiscountPolicyDto.class);
+        final DiscountPolicyForSave policyDto = mock(DiscountPolicyForSave.class);
         final DiscountPolicy mapedPolicy = mock(DiscountPolicy.class);
         when(modelMapper.map(policyDto, DiscountPolicy.class)).thenReturn(mapedPolicy);
         when(discountPolicyRepository.save(mapedPolicy)).thenReturn(mapedPolicy);
-        when(modelMapper.map(mapedPolicy, DiscountPolicyDto.class)).thenReturn(policyDto);
+        when(modelMapper.map(mapedPolicy, DiscountPolicyForSave.class)).thenReturn(policyDto);
 
         DiscountPolicyDto actualPolicy = discountPolicyService.save(policyDto);
 
@@ -69,9 +71,9 @@ public class DiscountPolicyServiceImplTest {
 
     @Test
     public void shouldFindAllPoliciesSuccessfully() {
-        discountPolicyService.findAll();
+        discountPolicyService.findAll(1, 1);
 
-        verify(discountPolicyRepository).findAll();
+        verify(discountPolicyRepository).findAll(Pageable.unpaged());
     }
 
     @Test
@@ -103,9 +105,9 @@ public class DiscountPolicyServiceImplTest {
     @Test
     public void getPoliciesByTrademarkId() {
         List<DiscountPolicy> policies = mock(List.class);
-        when(discountPolicyRepository.findByTrademark_Id(ID)).thenReturn(policies);
-        discountPolicyService.findByTrademarkId(ID);
+        when(discountPolicyRepository.findByTrademark_Id(ID, Pageable.unpaged())).thenReturn(policies);
+        discountPolicyService.findByTrademarkId(ID, 1, 2);
 
-        verify(discountPolicyRepository).findByTrademark_Id(ID);
+        verify(discountPolicyRepository).findByTrademark_Id(ID, Pageable.unpaged());
     }
 }

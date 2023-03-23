@@ -58,7 +58,6 @@ class TrademarkControllerTest {
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -81,9 +80,10 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllTrademarks_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL))
+        mockMvc.perform(get(ROOT_URL).param("pageNumber", "1")
+                                     .param("pageSize", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
@@ -91,7 +91,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getTrademarkById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
@@ -102,7 +102,7 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void addTrademark_ResponseCreated() {
         mockMvc.perform(post(ROOT_URL).contentType(CONTENT_JSON).content(NEW_DATA))
                 .andExpect(status().isCreated());
@@ -110,17 +110,18 @@ class TrademarkControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
-    public void updateTrademark_ResponseAccepted() {
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
+    public void updateTrademark_ResponseForbidden() {
         mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))
-                .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.title").value("test"));
+                .andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
-    @WithMockUser
-    public void deleteTrademark_ResponseAccepted() {
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
+    public void deleteTrademark_ResponseForbidden() {
         mockMvc.perform(delete(ROOT_URL.concat("/{id}"), "1"))
                 .andExpect(status().isAccepted());
     }

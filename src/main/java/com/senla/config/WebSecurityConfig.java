@@ -1,13 +1,12 @@
 package com.senla.config;
 
-import com.senla.exceptions.handler.RestAuthenticationEntryPoint;
+import com.senla.filter.RestAuthenticationEntryPoint;
 import com.senla.filter.JwtRequestFilter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +27,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @ComponentScan(basePackages = {"com.senla"})
 @EnableWebSecurity
-@PropertySource("classpath:application.properties")
 public class WebSecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;

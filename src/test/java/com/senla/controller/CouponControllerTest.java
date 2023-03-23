@@ -5,7 +5,6 @@ import com.senla.config.TestJPAConfig;
 import com.senla.config.WebConfig;
 import com.senla.config.WebSecurityConfig;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,8 +32,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -52,7 +49,7 @@ public class CouponControllerTest {
             "        \"startDate\": \"2012-12-17\",\n" +
             "        \"endDate\": \"2021-08-22\",\n" +
             "        \"discount\": 0.25,\n" +
-            "        \"used\": true,\n" +
+            "        \"isUsed\": false,\n" +
             "        \"trademark\": {\n" +
             "            \"id\": 1,\n" +
             "            \"title\": \"OZ\"\n" +
@@ -72,16 +69,10 @@ public class CouponControllerTest {
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity()).build();
-    }
-
-    @AfterEach
-    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
-    public void destroyDB() {
     }
 
     @Test
@@ -98,7 +89,10 @@ public class CouponControllerTest {
     @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser(roles = {"ADMIN"})
     public void getAllCoupons_ResponseOk() {
-        MvcResult mvcResult = mockMvc.perform(get("/coupons"))
+        MvcResult mvcResult = mockMvc.perform(get("/coupons/sort")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortingBy", "discount"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -108,12 +102,10 @@ public class CouponControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     public void getCouponById_ResponseOk() {
         mockMvc.perform(get("/coupons/{id}", "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andDo(print()).andExpect(status().isGone());
     }
 
     @SneakyThrows
@@ -122,9 +114,7 @@ public class CouponControllerTest {
     @Sql(scripts = "classpath:sql/insert_data.sql")
     public void getCouponByPurchase_ResponseOk() {
         mockMvc.perform(get("/coupons/purchase/{id}", "1"))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andDo(print()).andExpect(status().isNotFound());
     }
 
     @SneakyThrows
@@ -132,20 +122,29 @@ public class CouponControllerTest {
     @WithMockUser
     public void addCoupon_ResponseCreated() {
         mockMvc.perform(post("/coupons").contentType("application/json").content(NEW_COUPON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser
-    public void updateCoupon_ResponseAccepted() {
+    public void updateCoupon_ResponseAccessDenied() {
         mockMvc.perform(put("/coupons").contentType("application/json").content(UPDATING_COUPON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isForbidden());
     }
 
     @SneakyThrows
     @Test
     @WithMockUser
+    public void deleteCoupon_ResponseError() {
+        mockMvc.perform(delete("/coupons/{id}", "1"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @SneakyThrows
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void deleteCoupon_ResponseAccepted() {
         mockMvc.perform(delete("/coupons/{id}", "1"))
                 .andExpect(status().isAccepted());

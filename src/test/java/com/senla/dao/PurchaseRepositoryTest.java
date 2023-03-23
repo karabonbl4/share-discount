@@ -7,6 +7,7 @@ import com.senla.model.entity.Purchase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,7 +33,7 @@ public class PurchaseRepositoryTest {
     @Test
     @Transactional
     public void findByCard_Id() {
-        List<Purchase> actualPurchases = purchaseRepository.findByCard_Id(1L);
+        List<Purchase> actualPurchases = purchaseRepository.findByCard_Id(1L, Pageable.unpaged());
 
         String expectPurchaseName = "purchase2";
         String actualPurchaseName = actualPurchases.stream()
@@ -46,7 +47,7 @@ public class PurchaseRepositoryTest {
     @Test
     @Transactional
     public void findByUser_Id() {
-        List<Purchase> actualPurchases = purchaseRepository.findByUser_Id(1L);
+        List<Purchase> actualPurchases = purchaseRepository.findByBuyer_Id(1L, Pageable.unpaged());
 
         String actualPurchaseName = actualPurchases.stream()
                 .findFirst()

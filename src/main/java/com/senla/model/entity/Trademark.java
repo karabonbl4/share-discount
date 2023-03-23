@@ -1,6 +1,7 @@
 package com.senla.model.entity;
 
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.List;
 import java.util.Set;
@@ -20,10 +21,10 @@ public class Trademark {
     @Column
     private String title;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "trademarks")
-    private Set<User> admins;
-    @OneToMany(mappedBy = "trademark")
-    private Set<Coupon> coupons;
-    @OneToMany(mappedBy = "trademark")
-    private Set<DiscountPolicy> discountPolicies;
+    private List<User> admins;
+    @OneToMany(mappedBy = "trademark", fetch = FetchType.LAZY)
+    private List<Coupon> coupons;
+    @OneToMany(mappedBy = "trademark", fetch = FetchType.LAZY)
+    private List<DiscountPolicy> discountPolicies;
 
 }

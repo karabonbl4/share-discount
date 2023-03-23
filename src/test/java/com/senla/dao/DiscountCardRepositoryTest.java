@@ -6,19 +6,19 @@ import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
-        classes = {TestJPAConfig.class,
-                LiquibaseConfig.class
-        },
+        classes = {TestJPAConfig.class, LiquibaseConfig.class},
         loader = AnnotationConfigContextLoader.class)
 @Sql(scripts = "classpath:sql/insert_data.sql")
 public class DiscountCardRepositoryTest {
@@ -33,7 +33,7 @@ public class DiscountCardRepositoryTest {
     @Test
     @Transactional
     public void findByOwner_Id() {
-        String actualCardName = repository.findByOwner_Id(1L).stream()
+        String actualCardName = repository.findByOwner_Id(1L, Pageable.unpaged()).stream()
                 .findFirst()
                 .orElseThrow()
                 .getName();

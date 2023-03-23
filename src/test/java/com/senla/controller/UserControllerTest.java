@@ -73,7 +73,6 @@ class UserControllerTest {
             "    }";
 
     @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -96,9 +95,12 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getAllUsers_ResponseOk() {
-        mockMvc.perform(get(ROOT_URL))
+        mockMvc.perform(get(ROOT_URL)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_JSON));
@@ -106,7 +108,8 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    @WithMockUser
+    @Sql(scripts = "classpath:sql/insert_data.sql")
+    @WithMockUser(roles = {"ADMIN"})
     public void getUserById_ResponseOk() {
         mockMvc.perform(get(ROOT_URL.concat("/{id}"), "1"))
                 .andDo(print()).andExpect(status().isOk())
@@ -124,6 +127,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @WithMockUser
     public void updateUser_ResponseAccepted() {
         mockMvc.perform(put(ROOT_URL).contentType(CONTENT_JSON).content(UPDATING_DATA))

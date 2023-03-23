@@ -3,10 +3,9 @@ package com.senla.dao;
 import com.senla.config.LiquibaseConfig;
 import com.senla.config.TestJPAConfig;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,20 +25,11 @@ public class DiscountPolicyRepositoryTest {
     @Autowired
     private DiscountPolicyRepository repository;
 
-    @BeforeEach
-    @Sql(scripts = "classpath:sql/insert_data.sql")
-    public void setupDB() {
-    }
-
-    @AfterEach
-    @Sql(scripts = "classpath:sql/delete-all-from-table.sql")
-    public void destroyDB() {
-    }
-
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @Transactional
     public void findByTrademark_Id() {
-        String actualPolicyName = repository.findByTrademark_Id(1L).stream()
+        String actualPolicyName = repository.findByTrademark_Id(1L, Pageable.unpaged()).stream()
                 .findFirst()
                 .orElseThrow()
                 .getTitle();

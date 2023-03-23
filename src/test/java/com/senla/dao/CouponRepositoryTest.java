@@ -20,12 +20,12 @@ import static org.junit.Assert.*;
                 LiquibaseConfig.class
         },
         loader = AnnotationConfigContextLoader.class)
-@Sql(scripts = "classpath:sql/insert_data.sql")
 public class CouponRepositoryTest {
     @Autowired
     private CouponRepository repository;
 
     @Test
+    @Sql(scripts = "classpath:sql/insert_data.sql")
     @Transactional
     public void getCouponByPurchase_Id() {
         Coupon couponByPurchase_id = repository.getCouponByPurchase_Id(1L);

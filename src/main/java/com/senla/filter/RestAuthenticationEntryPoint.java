@@ -1,6 +1,7 @@
-package com.senla.exceptions.handler;
+package com.senla.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senla.model.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,4 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.error(String.valueOf(errorResponse));
         out.flush();
     }
-
 }

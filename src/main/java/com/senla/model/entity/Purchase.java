@@ -2,8 +2,16 @@ package com.senla.model.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -23,14 +31,13 @@ public class Purchase {
     private LocalDateTime transactionDate;
     @Column
     private BigDecimal sum;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private User buyer;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private DiscountCard card;
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
+    @OneToOne(targetEntity = Coupon.class, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "purchase")
     private Coupon coupon;
 
 }

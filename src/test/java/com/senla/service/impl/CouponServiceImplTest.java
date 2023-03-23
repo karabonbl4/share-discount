@@ -69,7 +69,7 @@ public class CouponServiceImplTest {
 
     @Test
     public void shouldFindAllSuccessfully() {
-        couponService.findAll();
+        couponService.findAllWithSort(1, 5, new String[]{"discount"});
 
         verify(couponRepository).findAll();
     }
